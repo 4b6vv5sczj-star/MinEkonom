@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Copilot Demo">
+<meta name="apple-mobile-web-app-title" content="Copilot">
 <title>Family Financial Copilot – Demo</title>
 <style>
 :root{--bg:#0d1318;--s:#161f29;--s2:#1b2632;--s3:#212e3b;--ink:#e9eef3;--muted:#9fb0bd;--line:#2c3c4b;--blue:#3f9bd6;--red:#c1304a;--green:#3f9b6e;--amber:#d6a53f;--bad:#e0809a}
@@ -53,10 +53,6 @@ input,select{background:var(--s2);border:1px solid var(--line);border-radius:11p
 .item{display:grid;grid-template-columns:1fr 105px 38px;gap:7px}
 .money{text-align:right}
 .danger{color:var(--bad)}
-.demoBar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:11px 16px;background:#3a2f12;border-bottom:1px solid #6b5320;color:#f2e0b6}
-.demoBar b{color:var(--amber)}
-.demoBar .btn{background:#4d3f18;border-color:#6b5320;color:#f7edd3;padding:8px 13px}
-.demoBar.gone{display:none}
 .notice{display:none;position:fixed;left:12px;right:12px;top:calc(76px + env(safe-area-inset-top));z-index:50;max-width:620px;margin:auto;padding:12px 14px;background:var(--s3);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px #0009;gap:12px;align-items:center;justify-content:space-between}
 .notice.show{display:flex}
 .notice .btn{padding:7px 13px;background:var(--s);white-space:nowrap}
@@ -90,6 +86,8 @@ input,select{background:var(--s2);border:1px solid var(--line);border-radius:11p
 .foot{margin-top:22px;text-align:center}
 @media(min-width:700px){.two{grid-template-columns:1fr 1fr}.metrics{grid-template-columns:repeat(4,1fr)}.stats{grid-template-columns:repeat(3,1fr)}.form{grid-template-columns:1fr 1fr}.hubGrid{grid-template-columns:1fr 1fr}.hubCard.history{grid-column:1/-1}.hubTitle{font-size:42px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+.loanList{display:grid;gap:12px;margin-top:14px}.loanCard{background:var(--s);border:1px solid var(--line);border-radius:16px;padding:17px}.loanTop{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.loanTop h2{margin:0}.loanActions{display:flex;gap:7px;flex-wrap:wrap}.scenarioGrid{display:grid;grid-template-columns:1fr;gap:10px}.scenarioBox{background:var(--s2);border:1px solid var(--line);border-radius:12px;padding:13px}.scenarioBox .value{font-size:22px}.loanChart{display:block;width:100%;height:260px;background:var(--s2);border-radius:12px}.seg{display:flex;gap:6px;flex-wrap:wrap}.seg .btn.active{background:var(--blue);border-color:var(--blue);color:#071018}.loanForm{display:grid;gap:10px}.loanForm label{display:grid;gap:5px;color:var(--muted);font-size:12px}.loanForm label span{font-weight:800}.loanForm input,.loanForm select{width:100%}.scenarioTabs{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.scenarioTab.active{background:var(--blue);border-color:var(--blue);color:#071018}.scenarioCompare{overflow:auto;margin-top:12px}.scenarioCompare table{width:100%;border-collapse:collapse;min-width:720px}.scenarioCompare th,.scenarioCompare td{padding:9px;border-bottom:1px solid var(--line);text-align:right}.scenarioCompare th:first-child,.scenarioCompare td:first-child{text-align:left}.scenarioEditor{border:1px solid var(--line);background:var(--s2);border-radius:14px;padding:14px;margin-top:10px}.loanViews{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}.loanView.active{background:var(--blue);border-color:var(--blue);color:#071018}.milestones{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}.milestone{background:var(--s2);border:1px solid var(--line);border-radius:12px;padding:11px}.payPlan{overflow:auto;margin-top:12px}.payPlan table{width:100%;border-collapse:collapse;min-width:650px}.payPlan th,.payPlan td{padding:9px;border-bottom:1px solid var(--line);text-align:right}.payPlan th:first-child,.payPlan td:first-child{text-align:left}.budgetImpact{margin-top:12px;padding:13px;border:1px solid var(--line);border-radius:12px;background:var(--s2)}.demoBar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:11px 16px;background:#3a2f12;border-bottom:1px solid #6b5320;color:#f2e0b6}.demoBar b{color:var(--amber)}.demoBar .btn{background:#4d3f18;border-color:#6b5320;color:#f7edd3;padding:8px 13px}.demoBar.gone{display:none}@media(min-width:700px){.scenarioGrid{grid-template-columns:repeat(3,1fr)}.loanForm{grid-template-columns:1fr 1fr}.loanForm .wide{grid-column:1/-1}}
 </style>
 </head>
 <body>
@@ -100,10 +98,7 @@ input,select{background:var(--s2);border:1px solid var(--line);border-radius:11p
   </div>
   <div id="topBalance" class="bal"><div class="label">Kvar att använda</div><b id="topRemain"></b></div>
 </header>
-<div id="demoBar" class="demoBar">
-  <span><b>Demo.</b> Alla siffror är påhittade. Familjen Alex och Sara finns inte.</span>
-  <button id="wipeDemo" class="btn" type="button">Radera demo och börja själv</button>
-</div>
+<div id="demoBar" class="demoBar"><span><b>Demo.</b> Alla siffror är påhittade. Familjen Alex och Sara finns inte.</span><button id="wipeDemo" class="btn" type="button">Radera demo och börja själv</button></div>
 <div id="notice" class="notice" role="status" aria-live="polite"></div>
 <main>
 
@@ -117,13 +112,14 @@ input,select{background:var(--s2);border:1px solid var(--line);border-radius:11p
     <button class="hubCard" type="button" data-open="today"><span class="hubIcon">💰</span><span><span class="hubH">Ekonomi idag</span><span class="muted">Kvar att använda, prognos och vardagsekonomi</span></span><span class="hubArrow">›</span></button>
     <button class="hubCard" type="button" data-open="receipts"><span class="hubIcon">🧾</span><span><span class="hubH">Kvitton &amp; OCR</span><span class="muted">Fotografera, läs och spara kvitton</span></span><span class="hubArrow">›</span></button>
     <button class="hubCard" type="button" data-open="afford"><span class="hubIcon">🧮</span><span><span class="hubH">Har vi råd?</span><span class="muted">Se konsekvensen innan ni bestämmer er</span></span><span class="hubArrow">›</span></button>
+    <button class="hubCard" type="button" data-open="loans"><span class="hubIcon">🏦</span><span><span class="hubH">Låneberäkning</span><span class="muted">Ränta, extra amortering och återbetalningstid</span></span><span class="hubArrow">›</span></button>
     <button class="hubCard" type="button" data-open="sunday"><span class="hubIcon">📅</span><span><span class="hubH">Söndagsöversikt</span><span class="muted">Veckoläget i lugn och begriplig form</span></span><span class="hubArrow">›</span></button>
     <button class="hubCard" type="button" data-open="safety"><span class="hubIcon">🛟</span><span><span class="hubH">Trygghet</span><span class="muted">Buffert, likvida medel och trygghetsmånader</span></span><span class="hubArrow">›</span></button>
     <button class="hubCard" type="button" data-open="backup"><span class="hubIcon">☁️</span><span><span class="hubH">Backup</span><span class="muted">Spara eller återställ din privata data</span></span><span class="hubArrow">›</span></button>
     <button class="hubCard history" type="button" data-open="history"><span class="hubIcon">📈</span><span><span class="hubH">Historik</span><span class="muted">Trender, kontoutdrag och den nördiga delen</span></span><span class="hubArrow">›</span></button>
   </div>
   <div class="hubPrivacy"><span>🔒</span><span>Inga ekonomiska siffror visas på startsidan. Ett ovanligt radikalt grepp: privat ekonomi får faktiskt vara privat.</span></div>
-  <div class="foot small muted">Sprint 9 Demo Edition · Demon sparas separat och påverkar inte din riktiga app</div>
+  <div class="foot small muted">Sprint 10.3 Demo Edition · Demon sparas separat och påverkar inte din privata app</div>
 </section>
 
 <section id="today" class="page">
@@ -192,6 +188,17 @@ input,select{background:var(--s2);border:1px solid var(--line);border-radius:11p
   <div id="affordImpact" class="card impact" style="margin-top:14px" hidden></div>
 </section>
 
+
+<section id="loans" class="page">
+  <div class="ey">Låneberäkning</div>
+  <h1>Lån &amp; scenarier</h1>
+  <div class="muted">Lägg till flera lån och jämför hur ränta, extra amortering och månadsbetalning påverkar tid och räntekostnad. Beräkningarna är simuleringar.</div>
+  <div id="loanSummary" class="grid stats" style="margin-top:14px"></div>
+  <button id="addLoan" class="btn primary" style="margin-top:14px" type="button">+ Lägg till lån</button>
+  <div id="loanEditor" class="card" style="margin-top:14px" hidden></div>
+  <div id="loanList" class="loanList"></div>
+</section>
+
 <section id="backup" class="page">
   <div class="ey">Privat backup</div>
   <h1>Backup</h1>
@@ -239,71 +246,61 @@ input,select{background:var(--s2);border:1px solid var(--line);border-radius:11p
 </main>
 <script>
 /* ---------- Data ---------- */
-/* Demo Edition: egen lagringsnyckel, rör aldrig den riktiga appens data. */
-const KEY='family-financial-demo-91',OLD=[],CLEARED='family-financial-demo-cleared';
+const KEY='family-financial-demo-103',OLD=[],CLEARED='family-financial-demo-103-cleared';
+const APP='family-financial-copilot',VERSION='10.3',MAX_IMAGE=15*1024*1024,MAX_PDF=25*1024*1024,MAX_BACKUP=20*1024*1024;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2);
 const list=a=>a.map(x=>({id:uid(),name:x[0],amount:x[1]}));
-const blank={income:[],fixed:[],savings:[],liquid:[],receipts:[],history:{},lastBackup:''};
-const defaults=blank;
-function demoReceipts(){
-  const d=new Date(),day=d.getDate(),mp=`${d.getFullYear()}-${pad(d.getMonth()+1)}`;
-  return [[1,'Prisma',86.4,'Mat'],[2,'Kaffehuset',9.8,'Restaurang'],[4,'Lidl',42.15,'Mat'],
-    [6,'Puuilo',64.9,'Hus'],[8,'K-Citymarket',112.3,'Mat'],[10,'Kaffehuset',12.4,'Restaurang'],
-    [12,'Lidl',37.6,'Mat'],[14,'Prisma',95.2,'Mat'],[16,'Puuilo',28.5,'Hobby'],
-    [18,'K-Citymarket',74.8,'Mat'],[20,'Kaffehuset',8.6,'Restaurang'],[22,'Lidl',51.3,'Mat'],
-    [24,'Prisma',103.7,'Mat'],[26,'K-Citymarket',66.2,'Mat']]
-    .filter(p=>p[0]<=day)
-    .map(([dd,store,amount,category])=>({id:uid(),store,date:`${mp}-${pad(dd)}`,amount,category}))
-    .reverse();
-}
-function demoHistory(){
-  const h={},d=new Date(),outs=[4980,5320,4710,5610,5120,4890,5430,5010];
-  let bal=5200;
-  for(let i=8;i>=1;i--){
-    const m=new Date(d.getFullYear(),d.getMonth()-i,1),income=5850+(i%3)*120,out=outs[8-i];
-    bal+=income-out;
-    h[`${m.getFullYear()}-${pad(m.getMonth()+1)}`]={income,out,balance:Math.round(bal),source:'Demo'};
-  }
-  return h;
-}
-function demoData(){
-  return{
-    income:list([['Alex',3200],['Sara',2650]]),
-    fixed:list([['Bostadslån',720],['Billån',310],['El och vatten',95],['Försäkringar',140],['Telefon och nät',79],['Dagvård',145],['Streaming',42]]),
-    savings:list([['Indexfond',200],['Semesterkonto',150],['Nödkonto',100]]),
-    liquid:list([['Bankkonto',4200],['Sparkonto',3800],['Nödkonto',2500]]),
-    receipts:demoReceipts(),history:demoHistory(),lastBackup:''
-  };
-}
-const isDemoCleared=()=>{try{return localStorage.getItem(CLEARED)==='1'}catch{return false}};
+const defaults={income:[],fixed:[],savings:[],liquid:[],receipts:[],history:{},loans:[],lastBackup:''};
 const $=s=>document.querySelector(s);
-const n=v=>Number(String(v??'').replace(/[\s\u00a0€]/g,'').replace(',','.'))||0;
+const n=v=>{const x=Number(String(v??'').replace(/[\s\u00a0€]/g,'').replace(',','.'));return Number.isFinite(x)?x:0};
+const cents=v=>Math.round(n(v)*100);
+const fromCents=v=>v/100;
+const money=v=>fromCents(cents(v));
 const eur=v=>new Intl.NumberFormat('sv-FI',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n(v));
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const pad=v=>String(v).padStart(2,'0');
 const ymd=(d=new Date())=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 const ym=(d=new Date())=>ymd(d).slice(0,7);
-
+function demoReceipts(){
+  const d=new Date(),day=d.getDate(),mp=`${d.getFullYear()}-${pad(d.getMonth()+1)}`;
+  return [[1,'Prisma',86.4,'Mat'],[2,'Kaffehuset',9.8,'Restaurang'],[4,'Lidl',42.15,'Mat'],[6,'Puuilo',64.9,'Hus'],[8,'K-Citymarket',112.3,'Mat'],[10,'Kaffehuset',12.4,'Restaurang'],[12,'Lidl',37.6,'Mat'],[14,'Prisma',95.2,'Mat'],[16,'Puuilo',28.5,'Hobby'],[18,'K-Citymarket',74.8,'Mat'],[20,'Kaffehuset',8.6,'Restaurang'],[22,'Lidl',51.3,'Mat'],[24,'Prisma',103.7,'Mat'],[26,'K-Citymarket',66.2,'Mat']].filter(p=>p[0]<=day).map(([dd,store,amount,category])=>({id:uid(),store,date:`${mp}-${pad(dd)}`,amount,category})).reverse();
+}
+function demoHistory(){
+  const h={},d=new Date(),outs=[4980,5320,4710,5610,5120,4890,5430,5010];let bal=5200;
+  for(let i=8;i>=1;i--){const m=new Date(d.getFullYear(),d.getMonth()-i,1),income=5850+(i%3)*120,out=outs[8-i];bal+=income-out;h[`${m.getFullYear()}-${pad(m.getMonth()+1)}`]={income,out,balance:Math.round(bal),source:'Demo'};}
+  return h;
+}
+function demoData(){return{
+  income:list([['Alex',3200],['Sara',2650]]),
+  fixed:list([['Bostad',720],['Billån',310],['El och vatten',95],['Försäkringar',140],['Telefon och nät',79],['Dagvård',145],['Streaming',42]]),
+  savings:list([['Indexfond',200],['Semesterkonto',150],['Nödkonto',100]]),
+  liquid:list([['Bankkonto',4200],['Sparkonto',3800],['Nödkonto',2500]]),
+  receipts:demoReceipts(),history:demoHistory(),
+  loans:[
+    {id:uid(),name:'Bostadslån',original:185000,balance:142000,rate:3.4,monthly:920,model:'payment',scenarios:[{id:uid(),name:'+150 €/mån',extraMonthly:150,lump:0,rate:3.4},{id:uid(),name:'Ränta +2 %',extraMonthly:0,lump:0,rate:5.4}]},
+    {id:uid(),name:'Billån',original:28000,balance:17600,rate:4.9,monthly:410,model:'payment',scenarios:[{id:uid(),name:'2 000 € extra nu',extraMonthly:0,lump:2000,rate:4.9}]}
+  ],lastBackup:''
+};}
+const isDemoCleared=()=>{try{return localStorage.getItem(CLEARED)==='1'}catch{return false}};
 function migrate(x){
   for(const k of ['income','fixed','savings','liquid']){
     if(x[k]&&!Array.isArray(x[k]))x[k]=Object.entries(x[k]).map(([name,amount])=>({id:uid(),name,amount}));
     if(!Array.isArray(x[k]))x[k]=structuredClone(defaults[k]);
-    x[k]=x[k].map(i=>({id:i.id||uid(),name:i.name??'',amount:n(i.amount)}));
+    x[k]=x[k].map(i=>({id:i.id||uid(),name:i.name??'',amount:money(i.amount)}));
   }
-  x.receipts=Array.isArray(x.receipts)?x.receipts.map(r=>({...r,id:r.id||uid(),amount:n(r.amount)})):[];
+  x.receipts=Array.isArray(x.receipts)?x.receipts.map(r=>({...r,id:r.id||uid(),amount:money(r.amount)})):[];
   x.history=(x.history&&typeof x.history==='object')?x.history:{};
+  x.loans=Array.isArray(x.loans)?x.loans.map(l=>sanitizeLoan(l)):[];
   x.lastBackup=x.lastBackup||'';
   return x;
 }
 function load(){
-  try{
-    const r=localStorage.getItem(KEY);
-    if(r)return migrate({...structuredClone(blank),...JSON.parse(r)});
-    return isDemoCleared()?structuredClone(blank):migrate(demoData());
-  }catch{return structuredClone(blank)}
+  try{const r=localStorage.getItem(KEY);if(r)return migrate({...structuredClone(defaults),...JSON.parse(r)});return isDemoCleared()?structuredClone(defaults):migrate(demoData());}
+  catch{return structuredClone(defaults)}
 }
 let data=load();
-const total=a=>(a||[]).reduce((s,x)=>s+n(x.amount),0);
+const totalCents=a=>(a||[]).reduce((s,x)=>s+cents(x.amount),0);
+const total=a=>fromCents(totalCents(a));
 
 /* Sparar lokalt. Om lagringen blir full slängs de äldsta kvittobilderna,
    aldrig siffrorna. */
@@ -342,7 +339,7 @@ function undo(){
 }
 
 /* ---------- Navigation ---------- */
-const PAGES=['home','today','receipts','afford','sunday','safety','backup','history'];
+const PAGES=['home','today','receipts','afford','loans','sunday','safety','backup','history'];
 /* history.pushState/replaceState kan vara blockerat (t.ex. sandboxade förhandsvisningar).
    Då används bara hash-navigering utan bakåtknapp-stöd, i stället för att krascha. */
 let navOk=true;
@@ -365,17 +362,17 @@ window.addEventListener('popstate',e=>navOk&&show(e.state?.page||location.hash.s
 /* ---------- Beräkningar ---------- */
 function totals(){
   const d=new Date(),mk=ym(d),
-    spent=data.receipts.filter(r=>String(r.date||'').slice(0,7)===mk).reduce((s,r)=>s+n(r.amount),0),
-    income=total(data.income),fixed=total(data.fixed),savings=total(data.savings),
-    remaining=income-fixed-savings-spent,
+    spentC=data.receipts.filter(r=>String(r.date||'').slice(0,7)===mk).reduce((s,r)=>s+cents(r.amount),0),
+    incomeC=totalCents(data.income),fixedC=totalCents(data.fixed),savingsC=totalCents(data.savings),
+    remainingC=incomeC-fixedC-savingsC-spentC,
     left=Math.max(0,new Date(d.getFullYear(),d.getMonth()+1,0).getDate()-d.getDate()),
-    rate=spent/Math.max(1,d.getDate()),
-    forecast=remaining-rate*left,
-    daily=left?Math.max(0,remaining)/left:remaining,
-    need=fixed+savings+rate*30.44,
-    liquid=total(data.liquid),
-    safe=need?liquid/need:0;
-  return{income,fixed,savings,spent,remaining,left,rate,forecast,daily,need,liquid,safe};
+    rateC=spentC/Math.max(1,d.getDate()),
+    forecastC=remainingC-rateC*left,
+    dailyC=left?Math.max(0,remainingC)/left:remainingC,
+    needC=fixedC+savingsC+rateC*30.44,
+    liquidC=totalCents(data.liquid),
+    safe=needC?liquidC/needC:0;
+  return{income:fromCents(incomeC),fixed:fromCents(fixedC),savings:fromCents(savingsC),spent:fromCents(spentC),remaining:fromCents(Math.round(remainingC)),left,rate:fromCents(rateC),forecast:fromCents(Math.round(forecastC)),daily:fromCents(Math.round(dailyC)),need:fromCents(Math.round(needC)),liquid:fromCents(liquidC),safe};
 }
 
 /* ---------- Poster ---------- */
@@ -385,7 +382,7 @@ function items(a,key){
 }
 function bind(){
   document.querySelectorAll('[data-name]').forEach(i=>i.onchange=()=>{const o=data[i.dataset.name].find(x=>x.id===i.dataset.id);if(o){o.name=i.value;save()}});
-  document.querySelectorAll('[data-amount]').forEach(i=>i.onchange=()=>{const o=data[i.dataset.amount].find(x=>x.id===i.dataset.id);if(o){o.amount=Math.max(0,n(i.value));save();render()}});
+  document.querySelectorAll('[data-amount]').forEach(i=>i.onchange=()=>{const o=data[i.dataset.amount].find(x=>x.id===i.dataset.id);if(o){o.amount=Math.max(0,money(i.value));save();render()}});
   document.querySelectorAll('[data-di]').forEach(b=>b.onclick=()=>{
     const o=data[b.dataset.di].find(x=>x.id===b.dataset.id),k=b.dataset.di,id=b.dataset.id;
     change(`${o&&o.name?o.name:'Posten'} togs bort.`,()=>{data[k]=data[k].filter(x=>x.id!==id)});
@@ -412,7 +409,7 @@ function render(){
   $('#todayMath').innerHTML=`Räknat så här: inkomster ${eur(t.income)} − fasta kostnader ${eur(t.fixed)} − sparande ${eur(t.savings)} − köp hittills i månaden ${eur(t.spent)}. ${t.left} dagar kvar av månaden.`;
   for(const k of ['income','fixed','savings','liquid'])$('#'+k).innerHTML=items(data[k],k);
   bind();
-  renderSunday();renderSafety();renderReceipts();renderAfford();renderHistory();renderBackup();
+  renderSunday();renderSafety();renderReceipts();renderAfford();renderLoans();renderHistory();renderBackup();
 }
 
 function renderSunday(){
@@ -453,7 +450,7 @@ function renderReceipts(){
 }
 $('#addReceipt').onclick=()=>{
   if(!$('#rStore').value.trim()||!n($('#rAmount').value))return note('Butik och belopp behövs.');
-  data.receipts.unshift({id:uid(),store:$('#rStore').value.trim(),date:$('#rDate').value||ymd(),amount:n($('#rAmount').value),category:$('#rCategory').value});
+  data.receipts.unshift({id:uid(),store:$('#rStore').value.trim(),date:$('#rDate').value||ymd(),amount:money($('#rAmount').value),category:$('#rCategory').value});
   save();$('#rStore').value='';$('#rAmount').value='';$('#rDate').value=ymd();render();note('Köpet sparades.');
 };
 $('#cameraBtn').onclick=()=>$('#cameraInput').click();
@@ -499,6 +496,8 @@ function parseReceiptText(text){
 }
 async function scanReceipt(file){
   if(!file)return;
+  if(!/^image\//i.test(file.type||''))return note('Filen måste vara en bild.');
+  if(file.size>MAX_IMAGE)return note('Bilden är för stor. Max 15 MB.');
   const panel=$('#ocrPanel');panel.hidden=false;
   panel.innerHTML='<div class="ey">Läser kvitto</div><div class="muted" id="ocrProgress">Startar…</div>';
   let image='';
@@ -524,12 +523,78 @@ function openOcrForm(q,image,errMsg){
   <div class="grid two" style="margin-top:10px"><button id="ocrSave" class="btn primary" type="button">Godkänn kvitto</button><button id="ocrCancel" class="btn" type="button">Avbryt</button></div>`;
   $('#ocrCancel').onclick=()=>{panel.hidden=true};
   $('#ocrSave').onclick=()=>{
-    const store=$('#os').value.trim(),amount=n($('#oa').value);
+    const store=$('#os').value.trim(),amount=money($('#oa').value);
     if(!store||!amount)return note('Butik och belopp behövs.');
     data.receipts.unshift({id:uid(),store,date:$('#od').value||ymd(),amount,category:$('#oc').value,image});
     save();panel.hidden=true;render();note('Kvittot sparades.');
   };
 }
+
+
+/* ---------- Låneberäkning ---------- */
+function sanitizeScenario(q={},fallbackRate=0){
+  return {id:String(q.id||uid()).slice(0,80),name:String(q.name||'Scenario').slice(0,50),extraMonthly:Math.max(0,money(q.extraMonthly)),lump:Math.max(0,money(q.lump)),rate:Math.max(0,Math.min(50,n(q.rate??fallbackRate)))};
+}
+function sanitizeLoan(l={}){
+  const model=l.model==='principal'?'principal':'payment',rate=Math.max(0,Math.min(50,n(l.rate)));
+  const scenarios=Array.isArray(l.scenarios)?l.scenarios.slice(0,4).map(q=>sanitizeScenario(q,rate)):[];
+  return {id:String(l.id||uid()).slice(0,80),name:String(l.name||'Nytt lån').slice(0,80),original:Math.max(0,money(l.original)),balance:Math.max(0,money(l.balance)),rate,monthly:Math.max(0,money(l.monthly)),model,scenarios};
+}
+function loanSchedule(loan,opt={}){
+  const balance0=Math.max(0,cents(opt.balance??loan.balance)), annual=Math.max(0,n(opt.rate??loan.rate)), model=opt.model||loan.model;
+  const base=Math.max(0,cents(opt.monthly??loan.monthly)), extra=Math.max(0,cents(opt.extraMonthly||0)), lump=Math.min(balance0,Math.max(0,cents(opt.lump||0)));
+  let bal=balance0-lump, interest=0, months=0; const points=[{month:0,balance:bal}];
+  const mr=annual/100/12, maxMonths=1200;
+  if(!bal)return {months:0,interest:0,total:lump,points:[{month:0,balance:0}],valid:true,lastPayment:0};
+  if(base<=0)return {months:Infinity,interest:Infinity,total:Infinity,points,valid:false,reason:'Månadsbetalningen måste vara större än 0.'};
+  while(bal>0&&months<maxMonths){
+    const int=Math.round(bal*mr); interest+=int; let principal;
+    if(model==='principal') principal=Math.min(bal,base+extra);
+    else {const pay=base+extra;if(pay<=int&&mr>0)return {months:Infinity,interest:Infinity,total:Infinity,points,valid:false,reason:'Månadsbetalningen täcker inte räntan.'};principal=Math.min(bal,Math.max(0,pay-int));}
+    if(principal<=0)return {months:Infinity,interest:Infinity,total:Infinity,points,valid:false,reason:'Lånet minskar inte med dessa värden.'};
+    bal-=principal;months++;if(months%3===0||bal===0)points.push({month:months,balance:bal});
+  }
+  if(months>=maxMonths&&bal>0)return {months:Infinity,interest:Infinity,total:Infinity,points,valid:false,reason:'Återbetalningstiden blir längre än 100 år.'};
+  return {months,interest,total:balance0+interest,points,valid:true};
+}
+function detailedLoanSchedule(loan,opt={}){
+  const balance0=Math.max(0,cents(opt.balance??loan.balance)),annual=Math.max(0,n(opt.rate??loan.rate)),model=opt.model||loan.model,base=Math.max(0,cents(opt.monthly??loan.monthly)),extra=Math.max(0,cents(opt.extraMonthly||0)),lump=Math.min(balance0,Math.max(0,cents(opt.lump||0))),mr=annual/100/12;
+  let bal=balance0-lump,month=0;const rows=[];while(bal>0&&month<1200){const interest=Math.round(bal*mr);let principal;if(model==='principal')principal=Math.min(bal,base+extra);else{const pay=base+extra;if(pay<=interest&&mr>0)break;principal=Math.min(bal,Math.max(0,pay-interest));}if(principal<=0)break;const payment=principal+interest;bal-=principal;month++;rows.push({month,payment,interest,principal,balance:bal});}return rows;
+}
+function annualPlan(loan,opt={}){const rows=detailedLoanSchedule(loan,opt),years=[];for(const r of rows){const y=Math.floor((r.month-1)/12);if(!years[y])years[y]={year:y+1,payment:0,interest:0,principal:0,balance:r.balance,months:0};const a=years[y];a.payment+=r.payment;a.interest+=r.interest;a.principal+=r.principal;a.balance=r.balance;a.months++;}return years;}
+function milestoneData(schedule,startBalance){if(!schedule.valid||!schedule.points.length)return[];const targets=[.75,.5,.25,0];return targets.map(frac=>{const target=startBalance*frac;let pt=schedule.points.find(p=>p.balance<=target);if(!pt)pt=schedule.points.at(-1);return {label:frac===0?'Skuldfri':`${Math.round((1-frac)*100)} % återbetalt`,month:pt.month,date:payoffDate(pt.month),balance:fromCents(pt.balance)};});}
+function monthsText(m){if(!Number.isFinite(m))return '—';const y=Math.floor(m/12),mo=m%12;return [y?`${y} år`:'',mo?`${mo} mån`:''].filter(Boolean).join(' ')||'0 mån'}
+function payoffDate(m){if(!Number.isFinite(m))return '—';const d=new Date();d.setMonth(d.getMonth()+m);return d.toLocaleDateString('sv-FI',{month:'short',year:'numeric'})}
+function requiredPayment(balance,annual,months){const P=cents(balance),r=n(annual)/100/12;if(!P||!months)return 0;if(!r)return fromCents(Math.ceil(P/months));return fromCents(Math.ceil(P*r/(1-Math.pow(1+r,-months))))}
+let loanEditId=null,activeScenario={},activeLoanView={};
+function openLoanEditor(id=null){
+  loanEditId=id;const old=id?data.loans.find(x=>x.id===id):null,l=old||sanitizeLoan({name:'',model:'payment'}),e=$('#loanEditor');e.hidden=false;
+  e.innerHTML=`<h2>${id?'Redigera lån':'Nytt lån'}</h2><div class="loanForm"><label><span>Namn</span><input id="lName" value="${esc(l.name)}" placeholder="Till exempel Bostadslån"></label><label><span>Betalningsmodell</span><select id="lModel"><option value="payment" ${l.model==='payment'?'selected':''}>Fast månadsbetalning inkl. ränta</option><option value="principal" ${l.model==='principal'?'selected':''}>Fast amortering + ränta</option></select></label><label><span>Ursprungligt lånebelopp</span><input id="lOriginal" inputmode="decimal" value="${l.original||''}" placeholder="120 000 €"></label><label><span>Kvarvarande skuld</span><input id="lBalance" inputmode="decimal" value="${l.balance||''}" placeholder="94 500 €"></label><label><span>Ränta %</span><input id="lRate" inputmode="decimal" value="${l.rate||''}" placeholder="3,25"></label><label><span>${l.model==='principal'?'Amortering per månad':'Månadsbetalning'}</span><input id="lMonthly" inputmode="decimal" value="${l.monthly||''}" placeholder="850 €"></label></div><div class="row"><button id="loanSave" class="btn primary" type="button">Spara lån</button><button id="loanCancel" class="btn" type="button">Avbryt</button></div>`;
+  $('#lModel').onchange=()=>{$('#lMonthly').closest('label').querySelector('span').textContent=$('#lModel').value==='principal'?'Amortering per månad':'Månadsbetalning'};
+  $('#loanCancel').onclick=()=>{e.hidden=true;loanEditId=null};
+  $('#loanSave').onclick=()=>{const x=sanitizeLoan({id:id||uid(),name:$('#lName').value.trim()||'Lån',original:$('#lOriginal').value,balance:$('#lBalance').value,rate:$('#lRate').value,monthly:$('#lMonthly').value,model:$('#lModel').value,scenarios:old?.scenarios||[]});if(!x.balance||!x.monthly)return note('Kvarvarande skuld och månadsbelopp behövs.');if(id)data.loans=data.loans.map(a=>a.id===id?x:a);else data.loans.push(x);save();e.hidden=true;loanEditId=null;render();note(id?'Lånet uppdaterades.':'Lånet sparades.');};
+}
+function scenarioCalc(l,q){return loanSchedule(l,{extraMonthly:q.extraMonthly,lump:q.lump,rate:q.rate})}
+function renderLoans(){
+  const box=$('#loanList');if(!box)return;const totalDebt=data.loans.reduce((s,l)=>s+cents(l.balance),0),totalMonthly=data.loans.reduce((s,l)=>s+cents(l.monthly),0),bases=data.loans.map(l=>loanSchedule(l)),totalInterest=bases.reduce((s,b)=>s+(b.valid?b.interest:0),0),lastMonths=bases.filter(b=>b.valid).reduce((m,b)=>Math.max(m,b.months),0);
+  $('#loanSummary').innerHTML=[['Aktiva lån',String(data.loans.length)],['Total skuld',eur(fromCents(totalDebt))],['Månadsbelopp',eur(fromCents(totalMonthly))],['Beräknad ränta kvar',eur(fromCents(totalInterest))],['Sista lånet klart',lastMonths?payoffDate(lastMonths):'—']].map(([k,v])=>`<div class="card"><div class="label">${k}</div><div class="value">${v}</div></div>`).join('');
+  if(!data.loans.length){box.innerHTML='<div class="card muted">Inga lån ännu. Lägg till ett lån för att börja simulera.</div>';return}
+  box.innerHTML=data.loans.map(l=>{const base=loanSchedule(l),sid=activeScenario[l.id]||l.scenarios[0]?.id||'',view=activeLoanView[l.id]||'overview';activeScenario[l.id]=sid;activeLoanView[l.id]=view;return `<div class="loanCard" data-loan="${l.id}"><div class="loanTop"><div><h2>${esc(l.name)}</h2><div class="small muted">${l.model==='principal'?'Fast amortering + ränta':'Fast månadsbetalning inkl. ränta'} · ${n(l.rate).toLocaleString('sv-FI',{maximumFractionDigits:2})} %</div></div><div class="loanActions"><button class="btn" data-le="${l.id}">Redigera</button><button class="btn danger" data-ld="${l.id}">Ta bort</button></div></div><div class="loanViews"><button class="btn loanView ${view==='overview'?'active':''}" data-lv="${l.id}" data-view="overview">Översikt</button><button class="btn loanView ${view==='scenarios'?'active':''}" data-lv="${l.id}" data-view="scenarios">Scenarier</button><button class="btn loanView ${view==='plan'?'active':''}" data-lv="${l.id}" data-view="plan">Betalningsplan</button></div><div data-lbody="${l.id}"></div></div>`}).join('');
+  document.querySelectorAll('[data-le]').forEach(b=>b.onclick=()=>openLoanEditor(b.dataset.le));document.querySelectorAll('[data-ld]').forEach(b=>b.onclick=()=>{const l=data.loans.find(x=>x.id===b.dataset.ld);change(`${l?.name||'Lånet'} togs bort.`,()=>data.loans=data.loans.filter(x=>x.id!==b.dataset.ld))});document.querySelectorAll('[data-lv]').forEach(b=>b.onclick=()=>{activeLoanView[b.dataset.lv]=b.dataset.view;renderLoans()});data.loans.forEach(l=>renderLoanView(l.id));
+}
+function renderLoanView(id){const l=data.loans.find(x=>x.id===id),body=document.querySelector(`[data-lbody="${id}"]`);if(!l||!body)return;const base=loanSchedule(l),view=activeLoanView[id]||'overview';if(!base.valid){body.innerHTML=`<div class="card danger" style="margin-top:12px">${esc(base.reason)}</div>`;return}if(view==='overview'){const ms=milestoneData(base,cents(l.balance));body.innerHTML=`<div class="scenarioGrid" style="margin-top:12px"><div class="scenarioBox"><div class="label">Kvarvarande skuld</div><div class="value">${eur(l.balance)}</div></div><div class="scenarioBox"><div class="label">Beräknad tid kvar</div><div class="value">${monthsText(base.months)}</div><div class="small muted">${payoffDate(base.months)}</div></div><div class="scenarioBox"><div class="label">Beräknad ränta kvar</div><div class="value">${eur(fromCents(base.interest))}</div></div></div><div class="card" style="margin-top:12px"><h2 style="margin-top:0">Milstolpar</h2><div class="milestones">${ms.map(m=>`<div class="milestone"><div class="label">${m.label}</div><b>${m.date}</b><div class="small muted">${m.month?monthsText(m.month):'Nu'}</div></div>`).join('')}</div></div><canvas class="loanChart" data-chart="${id}"></canvas>`;drawLoanChart(document.querySelector(`[data-chart="${id}"]`),base,base,'Nuvarande');return}if(view==='plan'){const years=annualPlan(l);body.innerHTML=`<div class="card" style="margin-top:12px"><h2 style="margin-top:0">Betalningsplan</h2><div class="small muted">Årsvis översikt. Beloppen är beräknade från dagens skuld och ränta.</div><div class="payPlan"><table><thead><tr><th>År</th><th>Betalningar</th><th>Amortering</th><th>Ränta</th><th>Skuld vid årets slut</th></tr></thead><tbody>${years.map((y,i)=>{const d=new Date();const year=d.getFullYear()+i;return `<tr><td><b>${year}</b>${y.months<12?` <span class="small muted">(${y.months} mån)</span>`:''}</td><td>${eur(fromCents(y.payment))}</td><td>${eur(fromCents(y.principal))}</td><td>${eur(fromCents(y.interest))}</td><td>${eur(fromCents(y.balance))}</td></tr>`}).join('')}</tbody></table></div></div>`;return}body.innerHTML=`<div class="card" style="margin-top:12px"><div class="row"><div><h2 style="margin:0">Scenarier</h2><div class="small muted">Spara upp till fyra alternativ och jämför dem med nuvarande plan.</div></div><button class="btn primary" data-sa="${l.id}" ${l.scenarios.length>=4?'disabled':''}>+ Lägg till scenario</button></div><div class="scenarioTabs"><button class="btn scenarioTab ${!activeScenario[id]?'active':''}" data-st="${l.id}" data-sid="">Nuvarande</button>${l.scenarios.map(q=>`<button class="btn scenarioTab ${activeScenario[id]===q.id?'active':''}" data-st="${l.id}" data-sid="${q.id}">${esc(q.name)}</button>`).join('')}</div><div data-se="${l.id}"></div><div data-result="${l.id}" style="margin-top:12px"></div><canvas class="loanChart" data-chart="${l.id}"></canvas><div class="budgetImpact" data-budget="${l.id}"></div><div class="scenarioCompare" data-compare="${l.id}"></div></div>`;document.querySelector(`[data-sa="${id}"]`)?.addEventListener('click',()=>addScenario(id));document.querySelectorAll(`[data-st="${id}"]`).forEach(b=>b.onclick=()=>{activeScenario[id]=b.dataset.sid;renderLoans()});renderScenarioArea(id);}
+function addScenario(id){const l=data.loans.find(x=>x.id===id);if(!l||l.scenarios.length>=4)return;const q=sanitizeScenario({name:`Scenario ${l.scenarios.length+1}`,rate:l.rate},l.rate);l.scenarios.push(q);activeScenario[id]=q.id;save();renderLoans();}
+function renderScenarioArea(id){
+  const l=data.loans.find(x=>x.id===id),base=loanSchedule(l),sid=activeScenario[id]||'',q=l.scenarios.find(x=>x.id===sid),ed=document.querySelector(`[data-se="${id}"]`),res=document.querySelector(`[data-result="${id}"]`),cmp=document.querySelector(`[data-compare="${id}"]`),budget=document.querySelector(`[data-budget="${id}"]`);if(!l||!ed||!res||!cmp)return;
+  if(!q){ed.innerHTML='<div class="muted small">Välj ett scenario ovan eller skapa ett nytt för att testa extra amortering, engångsbetalning eller annan ränta.</div>';res.innerHTML='';drawLoanChart(document.querySelector(`[data-chart="${id}"]`),base,base,'Nuvarande');}
+  else {ed.innerHTML=`<div class="scenarioEditor"><div class="loanForm"><label><span>Namn</span><input data-qname="${id}" value="${esc(q.name)}"></label><label><span>Extra per månad</span><input data-qextra="${id}" inputmode="decimal" value="${q.extraMonthly||''}" placeholder="0 €"></label><label><span>Engångsamortering nu</span><input data-qlump="${id}" inputmode="decimal" value="${q.lump||''}" placeholder="0 €"></label><label><span>Testad ränta %</span><input data-qrate="${id}" inputmode="decimal" value="${q.rate}"></label></div><div class="row"><div class="seg"><button class="btn" data-qadd="${id}" data-pct="1">+1 %</button><button class="btn" data-qadd="${id}" data-pct="2">+2 %</button><button class="btn" data-qadd="${id}" data-pct="3">+3 %</button></div><button class="btn danger" data-qdel="${id}">Ta bort scenario</button></div></div>`;const sc=scenarioCalc(l,q);if(sc.valid){const saved=fromCents(base.interest-sc.interest),diff=base.months-sc.months,req=requiredPayment(Math.max(0,l.balance-q.lump),q.rate,base.months);res.innerHTML=`<div class="scenarioGrid"><div class="scenarioBox"><div class="label">Ny tid kvar</div><div class="value">${monthsText(sc.months)}</div><div class="small muted">${diff>0?`${monthsText(diff)} snabbare`:diff<0?`${monthsText(-diff)} längre`:'Oförändrad tid'} · ${payoffDate(sc.months)}</div></div><div class="scenarioBox"><div class="label">Ränta kvar</div><div class="value">${eur(fromCents(sc.interest))}</div><div class="small muted">${saved>=0?`${eur(saved)} mindre ränta`:`${eur(-saved)} mer ränta`}</div></div><div class="scenarioBox"><div class="label">För samma återbetalningstid</div><div class="value">${l.model==='payment'?eur(req):'—'}</div><div class="small muted">${l.model==='payment'?`vid ${q.rate.toLocaleString('sv-FI',{maximumFractionDigits:2})} % ränta`:'Visas för fast månadsbetalning'}</div></div></div>`;drawLoanChart(document.querySelector(`[data-chart="${id}"]`),base,sc,q.name)}else res.innerHTML=`<div class="danger">${esc(sc.reason)}</div>`;
+    const commit=()=>{q.name=document.querySelector(`[data-qname="${id}"]`).value.trim()||'Scenario';q.extraMonthly=Math.max(0,money(document.querySelector(`[data-qextra="${id}"]`).value));q.lump=Math.max(0,money(document.querySelector(`[data-qlump="${id}"]`).value));q.rate=Math.max(0,Math.min(50,n(document.querySelector(`[data-qrate="${id}"]`).value)));save();renderLoans()};document.querySelectorAll(`[data-qname="${id}"],[data-qextra="${id}"],[data-qlump="${id}"],[data-qrate="${id}"]`).forEach(i=>i.onchange=commit);document.querySelectorAll(`[data-qadd="${id}"]`).forEach(b=>b.onclick=()=>{document.querySelector(`[data-qrate="${id}"]`).value=money(l.rate+n(b.dataset.pct));commit()});document.querySelector(`[data-qdel="${id}"]`).onclick=()=>{l.scenarios=l.scenarios.filter(x=>x.id!==q.id);activeScenario[id]=l.scenarios[0]?.id||'';save();renderLoans()};}
+  const rows=[{name:'Nuvarande',sc:base,extra:0,lump:0,rate:l.rate},...l.scenarios.map(q=>({name:q.name,sc:scenarioCalc(l,q),extra:q.extraMonthly,lump:q.lump,rate:q.rate}))];cmp.innerHTML=`<table><thead><tr><th>Alternativ</th><th>Extra/mån</th><th>Extra nu</th><th>Ränta</th><th>Tid kvar</th><th>Klart</th><th>Ränta kvar</th><th>Skillnad</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td><b>${esc(r.name)}</b></td><td>${i?'+'+eur(r.extra):'—'}</td><td>${i&&r.lump?eur(r.lump):'—'}</td><td>${n(r.rate).toLocaleString('sv-FI',{maximumFractionDigits:2})} %</td><td>${r.sc.valid?monthsText(r.sc.months):'—'}</td><td>${r.sc.valid?payoffDate(r.sc.months):'—'}</td><td>${r.sc.valid?eur(fromCents(r.sc.interest)):'—'}</td><td>${i&&r.sc.valid?`${base.months-r.sc.months>0?monthsText(base.months-r.sc.months)+' snabbare':base.months-r.sc.months<0?monthsText(r.sc.months-base.months)+' längre':'Oförändrad'}`:'—'}</td></tr>`).join('')}</tbody></table>`;
+  if(budget){const t=totals(),extra=q?q.extraMonthly:0,lump=q?q.lump:0,after=t.remaining-extra;budget.innerHTML=`<b>Påverkan på hushållsekonomin</b><div class="row"><span class="muted">Extra per månad i valt scenario</span><b>${extra?'-'+eur(extra):'0 €'}</b></div><div class="row"><span class="muted">Beräknat kvar denna månad efter extra/mån</span><b>${eur(after)}</b></div>${lump?`<div class="row"><span class="muted">Engångsamortering</span><b>${eur(lump)}</b></div>`:''}<div class="small muted" style="margin-top:8px">Visar endast den matematiska effekten mot Ekonomi idag. Scenariot ändrar inte hushållsbudgeten.</div>`;}
+}
+function drawLoanChart(c,a,b,label='Scenario'){
+  if(!c||!a.valid||!b.valid)return;const W=c.clientWidth;if(!W)return;const H=300,dpr=Math.min(2,devicePixelRatio||1);c.style.height=H+'px';c.width=W*dpr;c.height=H*dpr;const x=c.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,W,H);const L=W<520?58:68,R=18,T=48,B=52,plotW=W-L-R,plotH=H-T-B,maxDebt=Math.max(a.points[0]?.balance||1,b.points[0]?.balance||1),months=Math.max(a.months,b.months,1),X=m=>L+(m/months)*plotW,Y=v=>T+(1-v/maxDebt)*plotH;x.font='11px Segoe UI';x.textBaseline='middle';for(let i=0;i<=4;i++){const v=maxDebt*(1-i/4),yy=T+i*plotH;x.strokeStyle='#2c3c4b';x.lineWidth=1;x.beginPath();x.moveTo(L,yy);x.lineTo(W-R,yy);x.stroke();x.fillStyle='#9fb0bd';x.textAlign='right';x.fillText(eur(fromCents(v)),L-8,yy)}let step=12;if(months<=24)step=3;else if(months<=60)step=6;else if(months>240)step=24;const ticks=[];for(let m=0;m<=months;m+=step)ticks.push(m);if(ticks.at(-1)!==months)ticks.push(months);ticks.forEach(m=>{const xx=X(m);x.strokeStyle='#263541';x.beginPath();x.moveTo(xx,T);x.lineTo(xx,T+plotH);x.stroke();const lab=m===0?'Nu':m<12?`${m} mån`:m%12===0?`${m/12} år`:`${Math.floor(m/12)} år ${m%12} mån`;x.fillStyle='#9fb0bd';x.textAlign=m===0?'left':m===months?'right':'center';x.textBaseline='top';x.fillText(lab,xx,T+plotH+10)});x.textBaseline='middle';const line=(pts,color,width=3)=>{x.strokeStyle=color;x.lineWidth=width;x.lineJoin='round';x.lineCap='round';x.beginPath();pts.forEach((p,i)=>{const xx=X(p.month),yy=Y(p.balance);i?x.lineTo(xx,yy):x.moveTo(xx,yy)});x.stroke()};line(a.points,'#71828f',3);line(b.points,'#3f9bd6',3);const mark=(m,color,lab,dy)=>{const xx=X(Math.min(m,months)),yy=T+plotH;x.fillStyle=color;x.beginPath();x.arc(xx,yy,4,0,Math.PI*2);x.fill();x.font='11px Segoe UI';x.textAlign=xx>W-115?'right':'left';x.textBaseline='bottom';x.fillText(lab,xx+(xx>W-115?-7:7),yy+dy)};mark(a.months,'#71828f',`Nuvarande: ${monthsText(a.months)}`,-6);if(label!=='Nuvarande')mark(b.months,'#3f9bd6',`${label}: ${monthsText(b.months)}`,-22);x.font='12px Segoe UI';x.textAlign='left';x.textBaseline='middle';x.fillStyle='#9fb0bd';x.fillText('Skuld (€)',L,T-28);x.fillStyle='#71828f';x.fillRect(L+72,T-32,14,3);x.fillStyle='#9fb0bd';x.fillText('Nuvarande',L+92,T-30);if(label!=='Nuvarande'){x.fillStyle='#3f9bd6';x.fillRect(L+174,T-32,14,3);x.fillStyle='#9fb0bd';x.fillText(label.slice(0,18),L+194,T-30)}}
+$('#addLoan').onclick=()=>openLoanEditor();
 
 /* ---------- Har vi råd ---------- */
 function renderAfford(){
@@ -537,7 +602,7 @@ function renderAfford(){
     lead=$('#affordLead'),impact=$('#affordImpact');
   if(!price){lead.hidden=true;impact.hidden=true;$('#affordResult').innerHTML='';return}
   const after=t.remaining-price,afterForecast=t.forecast-price,afterDaily=t.left?Math.max(0,after)/t.left:after;
-  const verdict=afterForecast>=300?'Ja, det ryms':afterForecast>=0?'Ja, men det märks':'Nej, inte den här månaden';
+  const verdict=afterForecast>=300?'Inom månadens budget':afterForecast>=0?'Ryms, men marginalen blir liten':'Överskrider månadens beräknade utrymme';
   lead.hidden=false;
   lead.innerHTML=`<div class="label">${esc(name)} · ${eur(price)}</div><div class="verdict">${verdict}</div><div class="muted">Kvar direkt efter köpet: <b>${eur(after)}</b>. Månadsprognos efter köpet: <b>${eur(afterForecast)}</b>.</div>`;
   $('#affordResult').innerHTML=[['Kvar idag',t.remaining],['Kvar efter köpet',after],['Prognos efter köpet',afterForecast]]
@@ -570,11 +635,25 @@ async function importPDFs(){
     }
     let imported=0;const failed=[];
     for(const f of files){
+      if(f.size>MAX_PDF){failed.push(f.name+' (för stor)');continue}
+      if(f.type&&f.type!=='application/pdf'){failed.push(f.name+' (inte PDF)');continue}
       const pdf=await pdfjsLib.getDocument({data:await f.arrayBuffer()}).promise;
       let text='';
       for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p),content=await page.getTextContent();text+=' '+content.items.map(i=>i.str).join(' ')}
       const r=parseBankText(text,f.name);
-      if(r){data.history[r.month]={income:r.income,out:r.out,balance:r.balance,source:r.source};imported++}else failed.push(f.name);
+      if(r){
+        const preview=`Kontrollera importen innan den sparas:
+
+Månad: ${r.month}
+Insättningar: ${eur(r.income)}
+Uttag: ${eur(r.out)}
+Utgående saldo: ${eur(r.balance)}
+Källa: ${r.source}
+
+Stämmer uppgifterna?`;
+        if(confirm(preview)){data.history[r.month]={income:money(r.income),out:money(r.out),balance:money(r.balance),source:r.source};imported++}
+        else failed.push(f.name+' (avbruten efter kontroll)');
+      }else failed.push(f.name);
     }
     save();render();
     $('#importStatus').textContent=`${imported} av ${files.length} månadsutdrag importerades.`+(failed.length?` Kunde inte tolka: ${failed.join(', ')}. Fyll i de månaderna för hand.`:'');
@@ -588,7 +667,7 @@ $('#saveHist').onclick=()=>{
   if(!m)return note('Välj månad.');
   const existed=!!data.history[m];
   change(existed?`${m} skrevs över.`:`${m} sparades.`,()=>{
-    data.history[m]={income:n($('#hIncome').value),out:n($('#hOut').value),balance:n($('#hBalance').value),source:'Manuell'};
+    data.history[m]={income:money($('#hIncome').value),out:money($('#hOut').value),balance:money($('#hBalance').value),source:'Manuell'};
   });
 };
 function renderHistory(){
@@ -645,16 +724,39 @@ function drawChart(){
 let resizeTimer;
 window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(drawChart,150)});
 
+/* ---------- Validering ---------- */
+function validMonth(v){return typeof v==='string'&&/^20\d{2}-(0[1-9]|1[0-2])$/.test(v)}
+function cleanText(v,max=120){return typeof v==='string'?v.slice(0,max):''}
+function validateBackup(x){
+  if(!x||typeof x!=='object'||x.app!==APP)throw Error('Fel appformat');
+  const allowedVersions=new Set(['9.1','9.2','9.3','10.0','10.1','10.2','10.3','9.1-demo']);
+  if(x.version&&!allowedVersions.has(String(x.version)))throw Error('Backupversionen stöds inte');
+  for(const k of ['income','fixed','savings','liquid']){
+    if(x[k]!==undefined&&!Array.isArray(x[k]))throw Error('Ogiltig datastruktur');
+    if(Array.isArray(x[k])&&x[k].length>1000)throw Error('För många poster');
+  }
+  if(x.receipts!==undefined&&!Array.isArray(x.receipts))throw Error('Ogiltiga kvitton');
+  if(Array.isArray(x.receipts)&&x.receipts.length>5000)throw Error('För många kvitton');
+  if(x.history!==undefined&&(typeof x.history!=='object'||Array.isArray(x.history)))throw Error('Ogiltig historik');
+  if(x.history&&Object.keys(x.history).some(k=>!validMonth(k)))throw Error('Ogiltig månad i historiken');
+  const y=structuredClone(x);
+  for(const k of ['income','fixed','savings','liquid']) if(Array.isArray(y[k])) y[k]=y[k].map(i=>({id:cleanText(i?.id,80)||uid(),name:cleanText(i?.name),amount:Math.max(0,money(i?.amount))}));
+  if(Array.isArray(y.receipts)) y.receipts=y.receipts.map(r=>({id:cleanText(r?.id,80)||uid(),store:cleanText(r?.store),date:/^\d{4}-\d{2}-\d{2}$/.test(r?.date||'')?r.date:ymd(),amount:Math.max(0,money(r?.amount)),category:['Mat','Restaurang','Bil','Hus','Försäkring','Hobby','Shopping','Övrigt'].includes(r?.category)?r.category:'Övrigt',...(typeof r?.image==='string'&&r.image.startsWith('data:image/')&&r.image.length<2_000_000?{image:r.image}:{})}));
+  if(y.history) for(const [k,r] of Object.entries(y.history)) y.history[k]={income:money(r?.income),out:money(r?.out),balance:money(r?.balance),source:cleanText(r?.source,180)||'Manuell'};
+  y.loans=Array.isArray(y.loans)?y.loans.slice(0,100).map(sanitizeLoan):[];
+  return y;
+}
+
 /* ---------- Backup ---------- */
 function renderBackup(){
   $('#backupState').textContent=data.lastBackup?'Backup skapad':'Ingen backup ännu';
   $('#backupDate').textContent=data.lastBackup?new Date(data.lastBackup).toLocaleString('sv-FI'):'Lokal lagring är aktiv.';
   const bytes=new Blob([JSON.stringify(data)]).size,imgs=data.receipts.filter(r=>r.image).length;
-  $('#storageInfo').textContent=`Lagrat i den här webbläsaren: ${(bytes/1024).toFixed(0)} kB, ${data.receipts.length} kvitton (${imgs} med bild), ${Object.keys(data.history).length} månader historik. Data lämnar aldrig enheten om du inte själv sparar en backupfil.`;
+  $('#storageInfo').textContent=`Lagrat i den här webbläsaren: ${(bytes/1024).toFixed(0)} kB, ${data.receipts.length} kvitton (${imgs} med bild), ${Object.keys(data.history).length} månader historik, ${data.loans.length} lån. Ekonomiska data behandlas lokalt. OCR- och PDF-bibliotek laddas vid behov från jsDelivr; själva kvittot eller kontoutdraget skickas inte av appkoden. Backupfilen är okrypterad och ska förvaras säkert.`;
 }
 $('#backupBtn').onclick=async()=>{
   const stamp=new Date().toISOString();
-  const f=new File([JSON.stringify({app:'family-financial-copilot',version:'9.1-demo',...data},null,2)],`family-financial-backup-${stamp.slice(0,10)}.json`,{type:'application/json'});
+  const f=new File([JSON.stringify({app:APP,version:VERSION,...data},null,2)],`family-financial-demo-backup-${stamp.slice(0,10)}.json`,{type:'application/json'});
   try{
     if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f]});
     else{const u=URL.createObjectURL(f),a=document.createElement('a');a.href=u;a.download=f.name;a.click();setTimeout(()=>URL.revokeObjectURL(u),5000)}
@@ -664,12 +766,12 @@ $('#backupBtn').onclick=async()=>{
 $('#restoreBtn').onclick=()=>$('#restore').click();
 $('#restore').onchange=e=>{
   const file=e.target.files[0];if(!file)return;
+  if(file.size>MAX_BACKUP){e.target.value='';return note('Backupfilen är för stor. Max 20 MB.');}
   if(!confirm('Återställ backup? All data i appen ersätts.')){e.target.value='';return}
   const r=new FileReader();
   r.onload=()=>{
     try{
-      const x=JSON.parse(r.result);
-      if(x.app!=='family-financial-copilot')throw 0;
+      const x=validateBackup(JSON.parse(r.result));
       const before=structuredClone(data);
       data=migrate({...structuredClone(defaults),...x});
       save();render();
@@ -686,15 +788,28 @@ function paintDemoBar(){$('#demoBar').classList.toggle('gone',!demoActive())}
 $('#wipeDemo').onclick=()=>{
   if(!confirm('Radera all demo-data? Appen blir tom och du börjar med dina egna siffror.'))return;
   try{localStorage.setItem(CLEARED,'1');localStorage.removeItem(KEY)}catch{}
-  data=structuredClone(blank);
-  undoState=null;
-  paintDemoBar();render();
-  notice('Demon är raderad. Appen är tom och redo för dina egna siffror.',null,6000);
-  show('today');
+  data=structuredClone(defaults);undoState=null;paintDemoBar();render();
+  notice('Demon är raderad. Appen är tom och redo för dina egna siffror.',null,6000);show('today');
 };
+
+/* ---------- Självtest av kritisk ekonomilogik ---------- */
+function runSelfTests(){
+  const checks=[];
+  const test=(name,fn)=>{try{if(!fn())throw Error('fel resultat');checks.push([name,true])}catch(e){checks.push([name,false,e?.message||String(e)])}};
+  test('svenskt decimaltecken',()=>cents('1 234,56 €')===123456);
+  test('avrundning till cent',()=>cents(0.1+0.2)===30);
+  test('ogiltigt tal blir noll',()=>n('inte ett tal')===0);
+  test('giltig månad',()=>validMonth('2026-09')&&!validMonth('2026-13'));
+  test('backup av fel app stoppas',()=>{try{validateBackup({app:'annan-app'});return false}catch{return true}});
+  const failed=checks.filter(x=>!x[1]);
+  if(failed.length)console.error('Family Financial Copilot: självtest misslyckades',failed);
+  else console.info(`Family Financial Copilot ${VERSION}: ${checks.length} självtester godkända.`);
+  return failed.length===0;
+}
 
 /* ---------- Start ---------- */
 paintDemoBar();
+runSelfTests();
 $('#rDate').value=ymd();
 $('#hMonth').value=ym();
 let startPage='';try{startPage=location.hash.slice(1)}catch{}
