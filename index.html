@@ -3,7 +3,708 @@
 </style></head><body><div class="app"><aside class="side"><div class="brand"><div class="logo">€</div><div><b>Family Financial</b><div class="ey">Demo Edition</div></div></div><div id="side"></div></aside><div><header class="top"><div><span class="badge">DEMO</span><div class="ey" style="margin-top:4px">Alex + Sara</div></div><div class="bal"><div class="label">Kvar att använda</div><b id="topRemain"></b></div></header><main><div id="notice" class="notice"></div>
 <section id="home" class="page active"><div class="card demo"><b>Detta är en demo med påhittade siffror.</b><div class="muted small">Tryck på "Radera demo och börja själv" när du vill skapa din egen ekonomi.</div><button id="clearDemo" class="btn primary" style="margin-top:12px">Radera demo och börja själv</button></div><h1 style="margin-top:16px">Kvar att använda</h1><div class="grid metrics" style="margin-top:14px"><div class="card hero"><div class="label">Kvar att använda</div><div id="remain" class="value"></div></div><div class="card"><div class="label">Prognos</div><div id="forecast" class="value"></div></div><div class="card"><div class="label">Per dag</div><div id="daily" class="value"></div></div><div class="card"><div id="weatherIcon" style="font-size:32px"></div><b id="weather"></b></div></div><div class="grid two" style="margin-top:14px"><div class="card"><h2>Inkomster</h2><div id="income" class="items"></div><button class="btn add" data-add="income">+ Lägg till</button></div><div class="card"><h2>Fasta kostnader</h2><div id="fixed" class="items"></div><button class="btn add" data-add="fixed">+ Lägg till</button></div></div><div class="card" style="margin-top:14px"><h2>Sparande</h2><div id="savings" class="items"></div><button class="btn add" data-add="savings">+ Lägg till sparmål</button></div></section>
 <section id="sunday" class="page"><div class="ey">Söndagsöversikt™</div><h1>Veckoläget</h1><div id="week" class="grid stats" style="margin-top:14px"></div><div class="card" style="margin-top:14px"><h2>Copilot säger</h2><div id="weekComment"></div></div></section>
-<section id="safety" class="page"><div class="ey">Trygghetsmätare™</div><h1>Ekonomisk trygghet</h1><div id="safetyCards" class="grid stats" style="margin-top:14px"></div><div class="card" style="margin-top:14px"><h2>Konton och buffertar</h2><div id="liquid" class="items"></div><button class="btn add" data-add="liquid">+ Lägg till</button></div></section>
+<section id="safety" class="page"><div class="ey">Trygghetsmätare™</div><h1>Ekonomisk trygghet</h1><div id="safetyCards" class="grid stats" style="margin-top:14px"></div><div <!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d1318">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Copilot Demo">
+<title>Family Financial Copilot – Demo</title>
+<style>
+:root{--bg:#0d1318;--s:#161f29;--s2:#1b2632;--s3:#212e3b;--ink:#e9eef3;--muted:#9fb0bd;--line:#2c3c4b;--blue:#3f9bd6;--red:#c1304a;--green:#3f9b6e;--amber:#d6a53f;--bad:#e0809a}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 Calibri,"Segoe UI",Arial,sans-serif;overscroll-behavior-y:none}
+button,input,select{font:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.top{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top));background:#0d1318ef;backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.ey{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#71828f}
+.topLeft{display:flex;align-items:center;gap:10px;min-width:0}
+.topBrand{min-width:0}
+.topBrand b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.backBtn{display:none;border:1px solid var(--line);background:var(--s2);color:var(--ink);border-radius:11px;padding:9px 12px;font-weight:800}
+.bal{text-align:right}
+.bal b{display:block;color:var(--blue);font-size:20px;white-space:nowrap}
+.page{display:none;max-width:1100px;margin:auto;padding:18px 16px;padding-bottom:calc(46px + env(safe-area-inset-bottom))}
+.page.active{display:block}
+h1{font-size:30px;margin:2px 0 4px}
+h2{margin:0 0 12px;font-size:19px}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.grid{display:grid;gap:14px}
+.metrics,.stats{grid-template-columns:1fr 1fr}
+.two{grid-template-columns:1fr}
+.card{background:var(--s);border:1px solid var(--line);border-radius:16px;padding:17px}
+.hero{background:linear-gradient(145deg,var(--red),#8d2036);border-color:#df5269}
+.ok{background:linear-gradient(145deg,#1f6b4d,#14513a);border-color:#3f9b6e}
+.warn{background:linear-gradient(145deg,#6b5320,#4a3813);border-color:var(--amber)}
+.label{font-size:11px;font-weight:800;text-transform:uppercase;color:#71828f}
+.hero .label,.ok .label,.warn .label{color:#ffe3ea}
+.ok .label{color:#cdeadd}
+.warn .label{color:#f2e0b6}
+.value{font-size:29px;font-weight:900;margin-top:6px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:9px;margin-top:9px}
+input,select{background:var(--s2);border:1px solid var(--line);border-radius:11px;color:var(--ink);padding:11px;outline:none;min-width:0;max-width:100%}
+.btn{border:1px solid var(--line);border-radius:11px;background:var(--s2);color:var(--ink);padding:11px 14px;font-weight:800}
+.btn:active{transform:scale(.99)}
+.primary{background:var(--red);border-color:var(--red)}
+.add{width:100%;margin-top:12px;border-style:dashed}
+.items{display:grid;gap:8px}
+.item{display:grid;grid-template-columns:1fr 105px 38px;gap:7px}
+.money{text-align:right}
+.danger{color:var(--bad)}
+.demoBar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:11px 16px;background:#3a2f12;border-bottom:1px solid #6b5320;color:#f2e0b6}
+.demoBar b{color:var(--amber)}
+.demoBar .btn{background:#4d3f18;border-color:#6b5320;color:#f7edd3;padding:8px 13px}
+.demoBar.gone{display:none}
+.notice{display:none;position:fixed;left:12px;right:12px;top:calc(76px + env(safe-area-inset-top));z-index:50;max-width:620px;margin:auto;padding:12px 14px;background:var(--s3);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px #0009;gap:12px;align-items:center;justify-content:space-between}
+.notice.show{display:flex}
+.notice .btn{padding:7px 13px;background:var(--s);white-space:nowrap}
+.receipt{display:grid;grid-template-columns:auto 1fr auto auto;gap:9px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.receipt:last-child{border-bottom:0}
+.thumb{width:40px;height:40px;border-radius:9px;object-fit:cover;border:1px solid var(--line)}
+.form{display:grid;gap:10px}
+.form>*{width:100%}
+.resultHero{padding:22px;background:linear-gradient(145deg,#182b39,#22394b);border:1px solid #35566c;border-radius:16px}
+.verdict{font-size:24px;font-weight:900;margin:4px 0}
+.impact{border-left:4px solid var(--red)}
+.chart{display:block;width:100%;height:250px;background:var(--s2);border-radius:12px}
+.table{overflow:auto;-webkit-overflow-scrolling:touch}
+.table table{width:100%;border-collapse:collapse;min-width:650px}
+.table th,.table td{padding:9px;border-bottom:1px solid var(--line);text-align:right}
+.table th:first-child,.table td:first-child{text-align:left}
+.source{padding:10px;border-radius:10px;background:var(--s2);margin-top:8px}
+.badge{display:inline-block;border-radius:999px;padding:3px 9px;background:var(--s3);font-size:11px;color:var(--muted)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px}
+.legend span{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.dot{width:10px;height:10px;border-radius:50%}
+.hubHead{padding:12px 0 6px}
+.hubTitle{font-size:34px;line-height:1.08;margin:4px 0 8px}
+.hubGrid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:20px}
+.hubCard{appearance:none;width:100%;display:grid;grid-template-columns:54px 1fr auto;align-items:center;gap:14px;text-align:left;background:var(--s);border:1px solid var(--line);border-radius:18px;color:var(--ink);padding:18px;min-height:92px}
+.hubCard:active{transform:scale(.99);background:var(--s2)}
+.hubIcon{font-size:32px;line-height:1}
+.hubH{display:block;font-size:19px;font-weight:800;margin-bottom:3px}
+.hubArrow{font-size:24px;color:#71828f}
+.hubPrivacy{display:flex;gap:10px;align-items:flex-start;margin-top:18px;padding:14px;border:1px solid var(--line);border-radius:14px;background:#111920;color:var(--muted)}
+.foot{margin-top:22px;text-align:center}
+@media(min-width:700px){.two{grid-template-columns:1fr 1fr}.metrics{grid-template-columns:repeat(4,1fr)}.stats{grid-template-columns:repeat(3,1fr)}.form{grid-template-columns:1fr 1fr}.hubGrid{grid-template-columns:1fr 1fr}.hubCard.history{grid-column:1/-1}.hubTitle{font-size:42px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="topLeft">
+    <button id="backHome" class="backBtn" type="button">← Hubben</button>
+    <div class="topBrand"><div class="ey">Family Financial Copilot · Demo</div><b id="month"></b></div>
+  </div>
+  <div id="topBalance" class="bal"><div class="label">Kvar att använda</div><b id="topRemain"></b></div>
+</header>
+<div id="demoBar" class="demoBar">
+  <span><b>Demo.</b> Alla siffror är påhittade. Familjen Alex och Sara finns inte.</span>
+  <button id="wipeDemo" class="btn" type="button">Radera demo och börja själv</button>
+</div>
+<div id="notice" class="notice" role="status" aria-live="polite"></div>
+<main>
+
+<section id="home" class="page active">
+  <div class="hubHead">
+    <div class="ey">Family Financial Copilot</div>
+    <h1 class="hubTitle">Vad vill du göra?</h1>
+    <div class="muted">Välj en modul. Dina ekonomiska siffror visas först när du själv öppnar dem.</div>
+  </div>
+  <div class="hubGrid">
+    <button class="hubCard" type="button" data-open="today"><span class="hubIcon">💰</span><span><span class="hubH">Ekonomi idag</span><span class="muted">Kvar att använda, prognos och vardagsekonomi</span></span><span class="hubArrow">›</span></button>
+    <button class="hubCard" type="button" data-open="receipts"><span class="hubIcon">🧾</span><span><span class="hubH">Kvitton &amp; OCR</span><span class="muted">Fotografera, läs och spara kvitton</span></span><span class="hubArrow">›</span></button>
+    <button class="hubCard" type="button" data-open="afford"><span class="hubIcon">🧮</span><span><span class="hubH">Har vi råd?</span><span class="muted">Se konsekvensen innan ni bestämmer er</span></span><span class="hubArrow">›</span></button>
+    <button class="hubCard" type="button" data-open="sunday"><span class="hubIcon">📅</span><span><span class="hubH">Söndagsöversikt</span><span class="muted">Veckoläget i lugn och begriplig form</span></span><span class="hubArrow">›</span></button>
+    <button class="hubCard" type="button" data-open="safety"><span class="hubIcon">🛟</span><span><span class="hubH">Trygghet</span><span class="muted">Buffert, likvida medel och trygghetsmånader</span></span><span class="hubArrow">›</span></button>
+    <button class="hubCard" type="button" data-open="backup"><span class="hubIcon">☁️</span><span><span class="hubH">Backup</span><span class="muted">Spara eller återställ din privata data</span></span><span class="hubArrow">›</span></button>
+    <button class="hubCard history" type="button" data-open="history"><span class="hubIcon">📈</span><span><span class="hubH">Historik</span><span class="muted">Trender, kontoutdrag och den nördiga delen</span></span><span class="hubArrow">›</span></button>
+  </div>
+  <div class="hubPrivacy"><span>🔒</span><span>Inga ekonomiska siffror visas på startsidan. Ett ovanligt radikalt grepp: privat ekonomi får faktiskt vara privat.</span></div>
+  <div class="foot small muted">Sprint 9 Demo Edition · Demon sparas separat och påverkar inte din riktiga app</div>
+</section>
+
+<section id="today" class="page">
+  <div class="ey">Verklig ekonomi</div>
+  <h1>Kvar att använda</h1>
+  <div class="grid metrics" style="margin-top:14px">
+    <div id="remainCard" class="card hero"><div class="label">Kvar att använda</div><div id="remain" class="value"></div></div>
+    <div class="card"><div class="label">Prognos</div><div id="forecast" class="value"></div></div>
+    <div class="card"><div class="label">Per dag</div><div id="daily" class="value"></div></div>
+    <div class="card"><div id="weatherIcon" style="font-size:32px"></div><b id="weather"></b></div>
+  </div>
+  <div class="grid two" style="margin-top:14px">
+    <div class="card"><h2>Inkomster</h2><div id="income" class="items"></div><button class="btn add" data-add="income">+ Lägg till</button></div>
+    <div class="card"><h2>Fasta kostnader</h2><div id="fixed" class="items"></div><button class="btn add" data-add="fixed">+ Lägg till</button></div>
+  </div>
+  <div class="card" style="margin-top:14px"><h2>Sparande</h2><div id="savings" class="items"></div><button class="btn add" data-add="savings">+ Lägg till sparmål</button></div>
+  <div class="card small muted" style="margin-top:14px" id="todayMath"></div>
+</section>
+
+<section id="sunday" class="page">
+  <div class="ey">Söndagsöversikt™</div>
+  <h1>Veckoläget</h1>
+  <div id="week" class="grid stats" style="margin-top:14px"></div>
+  <div class="card" style="margin-top:14px"><h2>Copilot säger</h2><div id="weekComment"></div></div>
+</section>
+
+<section id="safety" class="page">
+  <div class="ey">Trygghetsmätare™</div>
+  <h1>Ekonomisk trygghet</h1>
+  <div id="safetyCards" class="grid stats" style="margin-top:14px"></div>
+  <div class="card" style="margin-top:14px"><h2>Konton och buffertar</h2><div id="liquid" class="items"></div><button class="btn add" data-add="liquid">+ Lägg till</button></div>
+  <div class="card small muted" style="margin-top:14px" id="safetyNote"></div>
+</section>
+
+<section id="receipts" class="page">
+  <div class="ey">Kvittohantering med OCR</div>
+  <h1>Registrera köp</h1>
+  <div class="grid two" style="margin-top:14px">
+    <button id="cameraBtn" class="btn primary" type="button">📷 Fotografera kvitto</button>
+    <button id="uploadBtn" class="btn" type="button">📁 Ladda upp kvitto</button>
+  </div>
+  <input id="cameraInput" type="file" accept="image/*" capture="environment" hidden>
+  <input id="uploadInput" type="file" accept="image/*" hidden>
+  <div id="ocrPanel" class="card" style="margin-top:14px" hidden></div>
+  <div class="card form" style="margin-top:14px">
+    <input id="rStore" placeholder="Butik">
+    <input id="rDate" type="date">
+    <input id="rAmount" inputmode="decimal" placeholder="Belopp">
+    <select id="rCategory"><option>Mat</option><option>Restaurang</option><option>Bil</option><option>Hus</option><option>Försäkring</option><option>Hobby</option><option>Shopping</option><option>Övrigt</option></select>
+  </div>
+  <button id="addReceipt" class="btn primary" style="margin-top:10px" type="button">Spara köp</button>
+  <div class="row" style="margin-top:18px"><h2 style="margin:0">Registrerade köp</h2><b id="receiptSum" class="muted"></b></div>
+  <div id="receiptList" class="card" style="margin-top:10px"></div>
+</section>
+
+<section id="afford" class="page">
+  <div class="ey">Har vi råd?</div>
+  <h1>Vad händer om vi köper det?</h1>
+  <div class="muted">Ingen moral. Bara ett tydligt svar och konsekvensen i euro.</div>
+  <div class="card form" style="margin-top:14px">
+    <input id="purchaseName" placeholder="Till exempel ny grill">
+    <input id="price" inputmode="decimal" placeholder="699 €">
+  </div>
+  <div id="affordLead" class="resultHero" style="margin-top:14px" hidden></div>
+  <div id="affordResult" class="grid stats" style="margin-top:14px"></div>
+  <div id="affordImpact" class="card impact" style="margin-top:14px" hidden></div>
+</section>
+
+<section id="backup" class="page">
+  <div class="ey">Privat backup</div>
+  <h1>Backup</h1>
+  <div class="card"><h2 id="backupState"></h2><div id="backupDate" class="muted"></div></div>
+  <div class="grid two" style="margin-top:14px">
+    <button id="backupBtn" class="btn primary" type="button">Spara backupfil</button>
+    <button id="restoreBtn" class="btn" type="button">Återställ backup</button>
+  </div>
+  <input id="restore" type="file" accept="application/json,.json" hidden>
+  <div class="card small muted" style="margin-top:14px" id="storageInfo"></div>
+</section>
+
+<section id="history" class="page">
+  <div class="ey">Historik sist, precis som beställt</div>
+  <h1>Historik &amp; trender™</h1>
+  <div class="muted">Importera kontoutdrag eller fyll i månaden manuellt. Banken får stå för siffrorna, appen för grafen.</div>
+  <div class="grid two" style="margin-top:14px">
+    <div class="card">
+      <h2>Importera OP-kontoutdrag</h2>
+      <input id="bankFiles" type="file" accept="application/pdf,.pdf" multiple>
+      <button id="importBank" class="btn primary" style="margin-top:10px" type="button">Läs valda PDF-filer</button>
+      <div id="importStatus" class="source muted">Inga filer lästa.</div>
+    </div>
+    <div class="card">
+      <h2>Manuell månad</h2>
+      <div class="form">
+        <input id="hMonth" type="month">
+        <input id="hIncome" inputmode="decimal" placeholder="Insättningar">
+        <input id="hOut" inputmode="decimal" placeholder="Uttag">
+        <input id="hBalance" inputmode="decimal" placeholder="Utgående saldo">
+      </div>
+      <button id="saveHist" class="btn" style="margin-top:10px" type="button">Spara månad</button>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="row"><h2 style="margin:0">Historiegraf</h2><select id="year"></select></div>
+    <canvas id="chart" class="chart"></canvas>
+    <div class="legend"><span><i class="dot" style="background:#3f9bd6"></i>Insättningar</span><span><i class="dot" style="background:#c1304a"></i>Uttag</span><span><i class="dot" style="background:#3f9b6e"></i>Utgående saldo</span></div>
+  </div>
+  <div class="card table" style="margin-top:14px">
+    <table><thead><tr><th>Månad</th><th>Insättningar</th><th>Uttag</th><th>Saldo</th><th>Källa</th><th></th></tr></thead><tbody id="histRows"></tbody></table>
+  </div>
+</section>
+
+</main>
+<script>
+/* ---------- Data ---------- */
+/* Demo Edition: egen lagringsnyckel, rör aldrig den riktiga appens data. */
+const KEY='family-financial-demo-91',OLD=[],CLEARED='family-financial-demo-cleared';
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2);
+const list=a=>a.map(x=>({id:uid(),name:x[0],amount:x[1]}));
+const blank={income:[],fixed:[],savings:[],liquid:[],receipts:[],history:{},lastBackup:''};
+const defaults=blank;
+function demoReceipts(){
+  const d=new Date(),day=d.getDate(),mp=`${d.getFullYear()}-${pad(d.getMonth()+1)}`;
+  return [[1,'Prisma',86.4,'Mat'],[2,'Kaffehuset',9.8,'Restaurang'],[4,'Lidl',42.15,'Mat'],
+    [6,'Puuilo',64.9,'Hus'],[8,'K-Citymarket',112.3,'Mat'],[10,'Kaffehuset',12.4,'Restaurang'],
+    [12,'Lidl',37.6,'Mat'],[14,'Prisma',95.2,'Mat'],[16,'Puuilo',28.5,'Hobby'],
+    [18,'K-Citymarket',74.8,'Mat'],[20,'Kaffehuset',8.6,'Restaurang'],[22,'Lidl',51.3,'Mat'],
+    [24,'Prisma',103.7,'Mat'],[26,'K-Citymarket',66.2,'Mat']]
+    .filter(p=>p[0]<=day)
+    .map(([dd,store,amount,category])=>({id:uid(),store,date:`${mp}-${pad(dd)}`,amount,category}))
+    .reverse();
+}
+function demoHistory(){
+  const h={},d=new Date(),outs=[4980,5320,4710,5610,5120,4890,5430,5010];
+  let bal=5200;
+  for(let i=8;i>=1;i--){
+    const m=new Date(d.getFullYear(),d.getMonth()-i,1),income=5850+(i%3)*120,out=outs[8-i];
+    bal+=income-out;
+    h[`${m.getFullYear()}-${pad(m.getMonth()+1)}`]={income,out,balance:Math.round(bal),source:'Demo'};
+  }
+  return h;
+}
+function demoData(){
+  return{
+    income:list([['Alex',3200],['Sara',2650]]),
+    fixed:list([['Bostadslån',720],['Billån',310],['El och vatten',95],['Försäkringar',140],['Telefon och nät',79],['Dagvård',145],['Streaming',42]]),
+    savings:list([['Indexfond',200],['Semesterkonto',150],['Nödkonto',100]]),
+    liquid:list([['Bankkonto',4200],['Sparkonto',3800],['Nödkonto',2500]]),
+    receipts:demoReceipts(),history:demoHistory(),lastBackup:''
+  };
+}
+const isDemoCleared=()=>{try{return localStorage.getItem(CLEARED)==='1'}catch{return false}};
+const $=s=>document.querySelector(s);
+const n=v=>Number(String(v??'').replace(/[\s\u00a0€]/g,'').replace(',','.'))||0;
+const eur=v=>new Intl.NumberFormat('sv-FI',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n(v));
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const pad=v=>String(v).padStart(2,'0');
+const ymd=(d=new Date())=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const ym=(d=new Date())=>ymd(d).slice(0,7);
+
+function migrate(x){
+  for(const k of ['income','fixed','savings','liquid']){
+    if(x[k]&&!Array.isArray(x[k]))x[k]=Object.entries(x[k]).map(([name,amount])=>({id:uid(),name,amount}));
+    if(!Array.isArray(x[k]))x[k]=structuredClone(defaults[k]);
+    x[k]=x[k].map(i=>({id:i.id||uid(),name:i.name??'',amount:n(i.amount)}));
+  }
+  x.receipts=Array.isArray(x.receipts)?x.receipts.map(r=>({...r,id:r.id||uid(),amount:n(r.amount)})):[];
+  x.history=(x.history&&typeof x.history==='object')?x.history:{};
+  x.lastBackup=x.lastBackup||'';
+  return x;
+}
+function load(){
+  try{
+    const r=localStorage.getItem(KEY);
+    if(r)return migrate({...structuredClone(blank),...JSON.parse(r)});
+    return isDemoCleared()?structuredClone(blank):migrate(demoData());
+  }catch{return structuredClone(blank)}
+}
+let data=load();
+const total=a=>(a||[]).reduce((s,x)=>s+n(x.amount),0);
+
+/* Sparar lokalt. Om lagringen blir full slängs de äldsta kvittobilderna,
+   aldrig siffrorna. */
+function save(){
+  for(let attempt=0;attempt<60;attempt++){
+    try{localStorage.setItem(KEY,JSON.stringify(data));return true}
+    catch(e){
+      const oldest=[...data.receipts].reverse().find(r=>r.image);
+      if(!oldest){note('Lagringen är full. Ta backup och radera gamla kvitton.');return false}
+      delete oldest.image;
+      if(attempt===0)note('Lagringen är nästan full. Äldre kvittobilder togs bort, siffrorna är kvar.');
+    }
+  }
+  return false;
+}
+let noticeTimer,undoState=null;
+function notice(text,undoLabel,ms){
+  const e=$('#notice');
+  e.innerHTML=`<span>${esc(text)}</span>`+(undoLabel?`<button id="undoBtn" class="btn" type="button">↩ ${esc(undoLabel)}</button>`:'');
+  e.classList.add('show');
+  clearTimeout(noticeTimer);
+  noticeTimer=setTimeout(()=>{e.classList.remove('show');undoState=null},ms||(undoLabel?9000:4000));
+  if(undoLabel)$('#undoBtn').onclick=undo;
+}
+function note(t){notice(t)}
+/* Ett steg bakåt. Tas bort när meddelandet slocknar. */
+function change(text,fn){
+  undoState=structuredClone(data);
+  fn();save();render();
+  notice(text,'Ångra');
+}
+function undo(){
+  if(!undoState)return;
+  data=migrate(undoState);undoState=null;
+  save();render();notice('Ångrat.');
+}
+
+/* ---------- Navigation ---------- */
+const PAGES=['home','today','receipts','afford','sunday','safety','backup','history'];
+function show(id,push=true){
+  if(!PAGES.includes(id))id='home';
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));
+  const atHome=id==='home';
+  $('#backHome').style.display=atHome?'none':'inline-block';
+  $('#topBalance').style.display=atHome?'none':'block';
+  document.body.dataset.page=id;
+  if(push&&location.hash.slice(1)!==id)history.pushState({page:id},'','#'+id);
+  window.scrollTo(0,0);
+  render();
+}
+document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>show(b.dataset.open));
+$('#backHome').onclick=()=>history.length>1?history.back():show('home');
+window.addEventListener('popstate',e=>show(e.state?.page||location.hash.slice(1)||'home',false));
+
+/* ---------- Beräkningar ---------- */
+function totals(){
+  const d=new Date(),mk=ym(d),
+    spent=data.receipts.filter(r=>String(r.date||'').slice(0,7)===mk).reduce((s,r)=>s+n(r.amount),0),
+    income=total(data.income),fixed=total(data.fixed),savings=total(data.savings),
+    remaining=income-fixed-savings-spent,
+    left=Math.max(0,new Date(d.getFullYear(),d.getMonth()+1,0).getDate()-d.getDate()),
+    rate=spent/Math.max(1,d.getDate()),
+    forecast=remaining-rate*left,
+    daily=left?Math.max(0,remaining)/left:remaining,
+    need=fixed+savings+rate*30.44,
+    liquid=total(data.liquid),
+    safe=need?liquid/need:0;
+  return{income,fixed,savings,spent,remaining,left,rate,forecast,daily,need,liquid,safe};
+}
+
+/* ---------- Poster ---------- */
+function items(a,key){
+  return a.map(x=>`<div class="item"><input data-name="${key}" data-id="${x.id}" value="${esc(x.name)}" placeholder="Namn"><input class="money" data-amount="${key}" data-id="${x.id}" value="${x.amount||''}" inputmode="decimal" placeholder="0"><button class="btn danger" type="button" data-di="${key}" data-id="${x.id}" aria-label="Ta bort">×</button></div>`).join('')
+  ||'<span class="muted small">Inga poster ännu.</span>';
+}
+function bind(){
+  document.querySelectorAll('[data-name]').forEach(i=>i.onchange=()=>{const o=data[i.dataset.name].find(x=>x.id===i.dataset.id);if(o){o.name=i.value;save()}});
+  document.querySelectorAll('[data-amount]').forEach(i=>i.onchange=()=>{const o=data[i.dataset.amount].find(x=>x.id===i.dataset.id);if(o){o.amount=Math.max(0,n(i.value));save();render()}});
+  document.querySelectorAll('[data-di]').forEach(b=>b.onclick=()=>{
+    const o=data[b.dataset.di].find(x=>x.id===b.dataset.id),k=b.dataset.di,id=b.dataset.id;
+    change(`${o&&o.name?o.name:'Posten'} togs bort.`,()=>{data[k]=data[k].filter(x=>x.id!==id)});
+  });
+}
+function addItem(k){
+  const row={id:uid(),name:'',amount:0};
+  data[k].push(row);save();render();
+  const el=document.querySelector(`[data-name="${k}"][data-id="${row.id}"]`);
+  if(el){el.focus();el.scrollIntoView({block:'center'})}
+}
+document.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>addItem(b.dataset.add));
+
+/* ---------- Render ---------- */
+function render(){
+  const t=totals(),d=new Date();
+  $('#month').textContent=d.toLocaleDateString('sv-FI',{month:'long',year:'numeric'});
+  $('#topRemain').textContent=$('#remain').textContent=eur(t.remaining);
+  $('#forecast').textContent=eur(t.forecast);
+  $('#daily').textContent=eur(t.daily);
+  $('#remainCard').className='card '+(t.remaining<0?'hero':t.remaining<300?'warn':'ok');
+  const w=t.forecast>=500?['☀️','Soligt']:t.forecast>=0?['🌥️','Mulet']:['⛈️','Stormvarning'];
+  $('#weatherIcon').textContent=w[0];$('#weather').textContent=w[1];
+  $('#todayMath').innerHTML=`Räknat så här: inkomster ${eur(t.income)} − fasta kostnader ${eur(t.fixed)} − sparande ${eur(t.savings)} − köp hittills i månaden ${eur(t.spent)}. ${t.left} dagar kvar av månaden.`;
+  for(const k of ['income','fixed','savings','liquid'])$('#'+k).innerHTML=items(data[k],k);
+  bind();
+  renderSunday();renderSafety();renderReceipts();renderAfford();renderHistory();renderBackup();
+}
+
+function renderSunday(){
+  const t=totals(),now=new Date(),day=(now.getDay()+6)%7,start=new Date(now);
+  start.setDate(now.getDate()-day);start.setHours(0,0,0,0);
+  const rs=data.receipts.filter(r=>r.date&&new Date(r.date+'T12:00:00')>=start),
+        sum=rs.reduce((a,r)=>a+n(r.amount),0);
+  $('#week').innerHTML=[['Kvar',eur(t.remaining)],['Prognos',eur(t.forecast)],['Per dag',eur(t.daily)],['Veckans köp',String(rs.length)]]
+    .map(([k,v],i)=>`<div class="card ${i===0?(t.remaining<0?'hero':'ok'):''}"><div class="label">${k}</div><div class="value">${v}</div></div>`).join('');
+  $('#weekComment').textContent=rs.length
+    ?`Veckan innehåller ${rs.length} registrerade köp för ${eur(sum)}. Prognosen för månaden är ${eur(t.forecast)}.`
+    :'Inga registrerade köp denna vecka.';
+}
+
+function renderSafety(){
+  const t=totals(),cls=t.safe>=3?'ok':t.safe>=1?'warn':'hero';
+  $('#safetyCards').innerHTML=[
+    ['Trygghetsmånader',t.safe.toLocaleString('sv-FI',{maximumFractionDigits:1})+' mån'],
+    ['Likvida medel',eur(t.liquid)],
+    ['Månadsbehov',eur(t.need)]
+  ].map(([k,v],i)=>`<div class="card ${i===0?cls:''}"><div class="label">${k}</div><div class="value">${v}</div></div>`).join('');
+  $('#safetyNote').textContent=t.need
+    ?`Månadsbehovet är fasta kostnader och sparande plus den takt ni handlar i just nu. Likvida medel räcker ${t.safe.toLocaleString('sv-FI',{maximumFractionDigits:1})} månader utan inkomst.`
+    :'Fyll i fasta kostnader under Ekonomi idag så räknas trygghetsmånaderna ut.';
+}
+
+/* ---------- Kvitton och OCR ---------- */
+function renderReceipts(){
+  const mk=ym(),monthSum=data.receipts.filter(r=>String(r.date||'').slice(0,7)===mk).reduce((s,r)=>s+n(r.amount),0);
+  $('#receiptSum').textContent=`Denna månad: ${eur(monthSum)}`;
+  $('#receiptList').innerHTML=data.receipts.length
+    ?data.receipts.map(r=>`<div class="receipt">${r.image?`<img class="thumb" src="${r.image}" alt="">`:'<span style="width:40px;text-align:center">🧾</span>'}<span><b>${esc(r.store)}</b><div class="small muted">${esc(r.date)} · ${esc(r.category)}</div></span><b>${eur(r.amount)}</b><button class="btn danger" type="button" data-rd="${r.id}" aria-label="Ta bort">×</button></div>`).join('')
+    :'<span class="muted">Inga köp ännu. Fotografera ett kvitto eller fyll i det för hand.</span>';
+  document.querySelectorAll('[data-rd]').forEach(b=>b.onclick=()=>{
+    const r=data.receipts.find(x=>x.id===b.dataset.rd),id=b.dataset.rd;
+    change(`${r&&r.store?r.store:'Köpet'} ${r?eur(r.amount):''} togs bort.`,()=>{data.receipts=data.receipts.filter(x=>x.id!==id)});
+  });
+}
+$('#addReceipt').onclick=()=>{
+  if(!$('#rStore').value.trim()||!n($('#rAmount').value))return note('Butik och belopp behövs.');
+  data.receipts.unshift({id:uid(),store:$('#rStore').value.trim(),date:$('#rDate').value||ymd(),amount:n($('#rAmount').value),category:$('#rCategory').value});
+  save();$('#rStore').value='';$('#rAmount').value='';$('#rDate').value=ymd();render();note('Köpet sparades.');
+};
+$('#cameraBtn').onclick=()=>$('#cameraInput').click();
+$('#uploadBtn').onclick=()=>$('#uploadInput').click();
+$('#cameraInput').onchange=e=>{scanReceipt(e.target.files[0]);e.target.value=''};
+$('#uploadInput').onchange=e=>{scanReceipt(e.target.files[0]);e.target.value=''};
+
+function fileDataUrl(file){return new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=no;r.readAsDataURL(file)})}
+/* Sparar en liten version av bilden så att lagringen inte tar slut efter tio kvitton. */
+async function thumbnail(file,max=560,q=.55){
+  try{
+    const url=await fileDataUrl(file);
+    const img=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=url});
+    const s=Math.min(1,max/Math.max(img.width,img.height));
+    const c=document.createElement('canvas');c.width=Math.round(img.width*s)||1;c.height=Math.round(img.height*s)||1;
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    return c.toDataURL('image/jpeg',q);
+  }catch{return ''}
+}
+function loadOCR(){return new Promise((ok,no)=>{
+  if(window.Tesseract)return ok(window.Tesseract);
+  const x=document.createElement('script');
+  x.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+  x.onload=()=>ok(window.Tesseract);
+  x.onerror=()=>no(Error('OCR kunde inte laddas. Kontrollera nätet, eller fyll i kvittot för hand nedan.'));
+  document.head.appendChild(x);
+})}
+function parseReceiptText(text){
+  const lines=text.split(/\r?\n/).map(x=>x.trim()).filter(Boolean),
+    vals=[...text.matchAll(/(?:EUR|€)?\s*(\d{1,5}[,.]\d{2})/gi)].map(m=>n(m[1])).filter(v=>v>0&&v<10000),
+    totalLines=lines.filter(x=>/\b(total|totalt|summa|yhteensä|maksettava|att betala)\b/i.test(x)),
+    tm=totalLines.map(l=>l.match(/(\d{1,5}[,.]\d{2})/)).filter(Boolean).at(-1),
+    dm=text.match(/\b(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{2,4})\b/);
+  let date=ymd();
+  if(dm){let y=dm[3];if(y.length===2)y='20'+y;const cand=`${y}-${pad(dm[2])}-${pad(dm[1])}`;if(!isNaN(Date.parse(cand)))date=cand}
+  const store=lines.find(x=>/[A-Za-zÅÄÖåäö]{3}/.test(x)&&!/(kvitto|receipt|kuitti|total|summa|y-tunnus|www|http)/i.test(x))||'';
+  const l=text.toLowerCase();
+  const category=/prisma|lidl|citymarket|k-market|s-market|alepa|market|puuilo/.test(l)?'Mat'
+    :/ravintola|restaurant|cafe|kahvila|kaffe|pizzeria/.test(l)?'Restaurang'
+    :/volvo|ford|diesel|bensin|neste|abc|huolto|teboil/.test(l)?'Bil'
+    :/vakuutus|försäkring/.test(l)?'Försäkring':'Övrigt';
+  return{store:store.slice(0,40),date,amount:tm?n(tm[1]):vals.length?Math.max(...vals):0,category};
+}
+async function scanReceipt(file){
+  if(!file)return;
+  const panel=$('#ocrPanel');panel.hidden=false;
+  panel.innerHTML='<div class="ey">Läser kvitto</div><div class="muted" id="ocrProgress">Startar…</div>';
+  let image='';
+  try{
+    image=await thumbnail(file);
+    const T=await loadOCR();
+    const w=await T.createWorker('swe+eng',1,{logger:m=>{const p=$('#ocrProgress');if(p&&m.status==='recognizing text')p.textContent=`Tolkar texten… ${Math.round(m.progress*100)} %`}});
+    const r=await w.recognize(file);
+    await w.terminate();
+    openOcrForm(parseReceiptText(r?.data?.text||''),image);
+  }catch(e){
+    openOcrForm({store:'',date:ymd(),amount:0,category:'Övrigt'},image,e.message||'OCR misslyckades.');
+  }
+}
+function openOcrForm(q,image,errMsg){
+  const panel=$('#ocrPanel');
+  panel.innerHTML=`${errMsg?`<div class="danger" style="margin-bottom:10px">${esc(errMsg)}</div>`:'<div class="ey">Kontrollera innan du godkänner</div>'}
+  <div class="row" style="align-items:flex-start;margin-top:8px">${image?`<img class="thumb" style="width:72px;height:96px" src="${image}" alt="">`:''}<div class="form" style="flex:1">
+  <input id="os" value="${esc(q.store)}" placeholder="Butik"><input id="od" type="date" value="${q.date}">
+  <input id="oa" value="${q.amount||''}" inputmode="decimal" placeholder="Belopp">
+  <select id="oc">${['Mat','Restaurang','Bil','Hus','Försäkring','Hobby','Shopping','Övrigt'].map(c=>`<option ${c===q.category?'selected':''}>${c}</option>`).join('')}</select>
+  </div></div>
+  <div class="grid two" style="margin-top:10px"><button id="ocrSave" class="btn primary" type="button">Godkänn kvitto</button><button id="ocrCancel" class="btn" type="button">Avbryt</button></div>`;
+  $('#ocrCancel').onclick=()=>{panel.hidden=true};
+  $('#ocrSave').onclick=()=>{
+    const store=$('#os').value.trim(),amount=n($('#oa').value);
+    if(!store||!amount)return note('Butik och belopp behövs.');
+    data.receipts.unshift({id:uid(),store,date:$('#od').value||ymd(),amount,category:$('#oc').value,image});
+    save();panel.hidden=true;render();note('Kvittot sparades.');
+  };
+}
+
+/* ---------- Har vi råd ---------- */
+function renderAfford(){
+  const t=totals(),price=n($('#price').value),name=$('#purchaseName').value.trim()||'Köpet',
+    lead=$('#affordLead'),impact=$('#affordImpact');
+  if(!price){lead.hidden=true;impact.hidden=true;$('#affordResult').innerHTML='';return}
+  const after=t.remaining-price,afterForecast=t.forecast-price,afterDaily=t.left?Math.max(0,after)/t.left:after;
+  const verdict=afterForecast>=300?'Ja, det ryms':afterForecast>=0?'Ja, men det märks':'Nej, inte den här månaden';
+  lead.hidden=false;
+  lead.innerHTML=`<div class="label">${esc(name)} · ${eur(price)}</div><div class="verdict">${verdict}</div><div class="muted">Kvar direkt efter köpet: <b>${eur(after)}</b>. Månadsprognos efter köpet: <b>${eur(afterForecast)}</b>.</div>`;
+  $('#affordResult').innerHTML=[['Kvar idag',t.remaining],['Kvar efter köpet',after],['Prognos efter köpet',afterForecast]]
+    .map(([k,v],i)=>`<div class="card ${i===1?(after<0?'hero':'ok'):''}"><div class="label">${k}</div><div class="value">${eur(v)}</div></div>`).join('');
+  impact.hidden=false;
+  impact.innerHTML=`<b>Faktisk påverkan</b><div class="row"><span class="muted">Minskning av månadsprognos</span><b>-${eur(price)}</b></div><div class="row"><span class="muted">Fria pengar per dag efter köpet</span><b>${eur(afterDaily)}</b></div><div class="small muted" style="margin-top:10px">Ingen moral är inkluderad. Den modulen avinstallerades avsiktligt.</div>`;
+}
+$('#purchaseName').oninput=renderAfford;
+$('#price').oninput=renderAfford;
+
+/* ---------- Historik ---------- */
+function parseBankText(text,fileName){
+  const period=text.match(/Period\s+(\d{1,2})\.(\d{1,2})\.\s*-\s*(\d{1,2})\.(\d{1,2})\.(\d{4})/i),
+    ymKey=period?`${period[5]}-${pad(period[2])}`:(fileName.match(/(20\d{2})[-_ ]?(0[1-9]|1[0-2])/)||[]).slice(1).join('-');
+  if(!ymKey)return null;
+  const ins=[...text.matchAll(/([\d\s]+[,.]\d{2})\s+Insättningar/gi)].map(m=>n(m[1])),
+    outs=[...text.matchAll(/[−-]([\d\s]+[,.]\d{2})\s+Uttag/gi)].map(m=>n(m[1])),
+    saldo=[...text.matchAll(/\+?([\d\s]+[,.]\d{2})\s+Saldo\s+\d{1,2}\.\d{1,2}\.20\d{2}/gi)].map(m=>n(m[1]));
+  if(!ins.length&&!outs.length&&!saldo.length)return null;
+  return{month:ymKey,income:ins.at(-1)||0,out:outs.at(-1)||0,balance:saldo.at(-1)||0,source:fileName};
+}
+async function importPDFs(){
+  const files=[...$('#bankFiles').files];
+  if(!files.length)return note('Välj PDF-filer först.');
+  $('#importStatus').textContent='Läser PDF-filer…';
+  try{
+    if(!window.pdfjsLib){
+      await new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js';s.onload=ok;s.onerror=no;document.head.appendChild(s)});
+      pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+    }
+    let imported=0;const failed=[];
+    for(const f of files){
+      const pdf=await pdfjsLib.getDocument({data:await f.arrayBuffer()}).promise;
+      let text='';
+      for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p),content=await page.getTextContent();text+=' '+content.items.map(i=>i.str).join(' ')}
+      const r=parseBankText(text,f.name);
+      if(r){data.history[r.month]={income:r.income,out:r.out,balance:r.balance,source:r.source};imported++}else failed.push(f.name);
+    }
+    save();render();
+    $('#importStatus').textContent=`${imported} av ${files.length} månadsutdrag importerades.`+(failed.length?` Kunde inte tolka: ${failed.join(', ')}. Fyll i de månaderna för hand.`:'');
+  }catch(e){
+    $('#importStatus').textContent='PDF-importen misslyckades. Du kan fortfarande fylla i månaden för hand.';
+  }
+}
+$('#importBank').onclick=importPDFs;
+$('#saveHist').onclick=()=>{
+  const m=$('#hMonth').value;
+  if(!m)return note('Välj månad.');
+  const existed=!!data.history[m];
+  change(existed?`${m} skrevs över.`:`${m} sparades.`,()=>{
+    data.history[m]={income:n($('#hIncome').value),out:n($('#hOut').value),balance:n($('#hBalance').value),source:'Manuell'};
+  });
+};
+function renderHistory(){
+  const years=[...new Set([String(new Date().getFullYear()),...Object.keys(data.history).map(k=>k.slice(0,4))])].sort(),
+    sel=$('#year'),old=sel.value;
+  sel.innerHTML=years.map(y=>`<option>${y}</option>`).join('');
+  sel.value=old&&years.includes(old)?old:String(new Date().getFullYear());
+  const rows=Object.entries(data.history).sort();
+  $('#histRows').innerHTML=rows.length
+    ?rows.map(([m,r])=>`<tr><td>${m}</td><td>${eur(r.income)}</td><td>${eur(r.out)}</td><td>${eur(r.balance)}</td><td><span class="badge">${esc(r.source||'Manuell')}</span></td><td><button class="btn danger" type="button" data-hd="${m}" aria-label="Ta bort">×</button></td></tr>`).join('')
+    :'<tr><td colspan="6" class="muted">Ingen historik ännu. Importera ett kontoutdrag eller fyll i en månad.</td></tr>';
+  document.querySelectorAll('[data-hd]').forEach(b=>b.onclick=()=>{
+    const m=b.dataset.hd;
+    change(`${m} togs bort ur historiken.`,()=>{delete data.history[m]});
+  });
+  drawChart();
+}
+$('#year').onchange=drawChart;
+function drawChart(){
+  const c=$('#chart');
+  const cssW=c.clientWidth;
+  if(!cssW)return;
+  const cssH=250,dpr=Math.min(2,window.devicePixelRatio||1);
+  c.width=cssW*dpr;c.height=cssH*dpr;
+  const x=c.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);
+  const y=$('#year').value||String(new Date().getFullYear()),
+    keys=Array.from({length:12},(_,i)=>`${y}-${pad(i+1)}`),
+    v=keys.map(k=>data.history[k]||null),
+    W=cssW,H=cssH,p=30,
+    max=Math.max(1,...v.filter(Boolean).flatMap(r=>[n(r.income),n(r.out),n(r.balance)]));
+  x.clearRect(0,0,W,H);
+  x.strokeStyle='#2c3c4b';x.lineWidth=1;
+  x.beginPath();x.moveTo(p,H-p);x.lineTo(W-p+8,H-p);x.stroke();
+  x.fillStyle='#9fb0bd';x.font='12px Segoe UI';
+  keys.forEach((_,i)=>x.fillText(String(i+1),p+i*(W-2*p)/11-3,H-8));
+  x.fillText(eur(max),4,16);
+  const px=i=>p+i*(W-2*p)/11,py=val=>H-p-val/max*(H-2*p-14);
+  /* Månader utan data ritas inte som noll, linjen bryts i stället. */
+  function line(color,get){
+    x.strokeStyle=color;x.lineWidth=3;x.fillStyle=color;
+    let open=false;x.beginPath();
+    v.forEach((r,i)=>{
+      if(!r){open=false;return}
+      const X=px(i),Y=py(n(get(r)));
+      open?x.lineTo(X,Y):x.moveTo(X,Y);open=true;
+    });
+    x.stroke();
+    v.forEach((r,i)=>{if(!r)return;x.beginPath();x.arc(px(i),py(n(get(r))),3.5,0,7);x.fill()});
+  }
+  line('#3f9bd6',r=>r.income);
+  line('#c1304a',r=>r.out);
+  line('#3f9b6e',r=>r.balance);
+}
+let resizeTimer;
+window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(drawChart,150)});
+
+/* ---------- Backup ---------- */
+function renderBackup(){
+  $('#backupState').textContent=data.lastBackup?'Backup skapad':'Ingen backup ännu';
+  $('#backupDate').textContent=data.lastBackup?new Date(data.lastBackup).toLocaleString('sv-FI'):'Lokal lagring är aktiv.';
+  const bytes=new Blob([JSON.stringify(data)]).size,imgs=data.receipts.filter(r=>r.image).length;
+  $('#storageInfo').textContent=`Lagrat i den här webbläsaren: ${(bytes/1024).toFixed(0)} kB, ${data.receipts.length} kvitton (${imgs} med bild), ${Object.keys(data.history).length} månader historik. Data lämnar aldrig enheten om du inte själv sparar en backupfil.`;
+}
+$('#backupBtn').onclick=async()=>{
+  const stamp=new Date().toISOString();
+  const f=new File([JSON.stringify({app:'family-financial-copilot',version:'9.1-demo',...data},null,2)],`family-financial-backup-${stamp.slice(0,10)}.json`,{type:'application/json'});
+  try{
+    if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f]});
+    else{const u=URL.createObjectURL(f),a=document.createElement('a');a.href=u;a.download=f.name;a.click();setTimeout(()=>URL.revokeObjectURL(u),5000)}
+    data.lastBackup=stamp;save();render();note('Backupen skapades.');
+  }catch(e){if(e&&e.name!=='AbortError')note('Backupen avbröts.')}
+};
+$('#restoreBtn').onclick=()=>$('#restore').click();
+$('#restore').onchange=e=>{
+  const file=e.target.files[0];if(!file)return;
+  if(!confirm('Återställ backup? All data i appen ersätts.')){e.target.value='';return}
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const x=JSON.parse(r.result);
+      if(x.app!=='family-financial-copilot')throw 0;
+      const before=structuredClone(data);
+      data=migrate({...structuredClone(defaults),...x});
+      save();render();
+      undoState=before;notice('Backupen återställdes.','Ångra',15000);
+    }catch{note('Filen är inte en giltig backup från den här appen.')}
+    e.target.value='';
+  };
+  r.readAsText(file);
+};
+
+/* ---------- Demo ---------- */
+function demoActive(){return !isDemoCleared()}
+function paintDemoBar(){$('#demoBar').classList.toggle('gone',!demoActive())}
+$('#wipeDemo').onclick=()=>{
+  if(!confirm('Radera all demo-data? Appen blir tom och du börjar med dina egna siffror.'))return;
+  try{localStorage.setItem(CLEARED,'1');localStorage.removeItem(KEY)}catch{}
+  data=structuredClone(blank);
+  undoState=null;
+  paintDemoBar();render();
+  notice('Demon är raderad. Appen är tom och redo för dina egna siffror.',null,6000);
+  show('today');
+};
+
+/* ---------- Start ---------- */
+paintDemoBar();
+$('#rDate').value=ymd();
+$('#hMonth').value=ym();
+const startPage=location.hash.slice(1);
+history.replaceState({page:PAGES.includes(startPage)?startPage:'home'},'','#'+(PAGES.includes(startPage)?startPage:'home'));
+show(PAGES.includes(startPage)?startPage:'home',false);
+</script>
+</body>
+</html>
+class="card" style="margin-top:14px"><h2>Konton och buffertar</h2><div id="liquid" class="items"></div><button class="btn add" data-add="liquid">+ Lägg till</button></div></section>
 <section id="receipts" class="page"><div class="ey">Kvittohantering med OCR</div><h1>Kvitton</h1><div class="grid two" style="margin-top:14px"><button id="cameraBtn" class="btn primary">📷 Fotografera kvitto</button><button id="uploadBtn" class="btn">📁 Ladda upp kvitto</button></div><input id="cameraInput" type="file" accept="image/*" capture="environment" hidden><input id="uploadInput" type="file" accept="image/*" hidden><div id="ocrPanel" class="card ocr" style="margin-top:14px" hidden></div><div id="receiptList" class="card" style="margin-top:14px"></div></section>
 <section id="afford" class="page"><div class="ey">Har vi råd?</div><h1>Testa ett köp</h1><div class="card form" style="margin-top:14px"><input id="purchase" placeholder="Ny grill"><input id="price" inputmode="decimal" placeholder="699 €"></div><div id="affordResult" class="grid stats" style="margin-top:14px"></div></section>
 <section id="backup" class="page"><div class="ey">Privat backup</div><h1>Backup</h1><div class="card"><h2 id="backupState"></h2><div id="backupDate" class="muted"></div></div><div class="grid two" style="margin-top:14px"><button id="backupBtn" class="btn primary">Spara till iCloud</button><button id="restoreBtn" class="btn">Återställ backup</button></div><input id="restore" type="file" accept="application/json,.json" hidden></section>
